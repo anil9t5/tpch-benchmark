@@ -8,5 +8,6 @@ Prequisites installed on the system
 
 
 Run individual module on terminal
+
 python -m <module name> // module name => mongodb, postgresql, hbase, neo4j
 
