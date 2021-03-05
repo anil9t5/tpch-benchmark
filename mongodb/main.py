@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from mongodb.collections import Collections
+from mongodb.insert_data import InsertData
 
 
 def main():
@@ -8,3 +9,6 @@ def main():
 
     task = Collections()
     task.create_collections()
+
+    insert_task = InsertData()
+    insert_task.insert_to_collections()
