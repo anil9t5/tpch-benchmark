@@ -1,4 +1,5 @@
 from mongodb.initialize_db import InitilizeDB
+import string
 
 
 class Collections:
@@ -7,9 +8,16 @@ class Collections:
 
     def create_collections(self):
         InitilizeDB.init()
-        # collection_names = ["part", "supplier", "partsupp",
-        #                     "customer", "orders", "lineitem", "nation", "region"]
+
+        list_collections = InitilizeDB.list_collections()
+
+        for collection in list_collections:
+            if collection is not None:
+                InitilizeDB.drop_collections(collection)
+
         intitial_values = {}
-        collection_names = ["region"]
+        collection_names = ["region", "part", "supplier",
+                            "partsupp", "customer", "orders", "lineitem", "nation"]
+
         for each_val in collection_names:
             InitilizeDB.insert(each_val, intitial_values)
