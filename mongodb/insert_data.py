@@ -16,23 +16,17 @@ class InsertData:
         return str(res)
 
     @staticmethod
-    def populate_region_or_nation(data):
-        values = []
+    def region():
+        region_names = {"AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"}
+        region_collection_values = []
 
-        for i, val in enumerate(data):
+        for i, val in enumerate(region_names):
             value = {
                 "region_key": i,
                 "name": val,
                 "comment": InsertData.generate_random_data()
             }
-            values.append(value)
-        return values
-
-    @staticmethod
-    def region():
-        region_names = {"AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"}
-        region_collection_values = InsertData.populate_region_or_nation(
-            region_names)
+            region_collection_values.append(value)
         InitilizeDB.insert(
             InitilizeDB.DATABASE["region"].name, region_collection_values)
 
@@ -42,8 +36,15 @@ class InsertData:
                                 "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
                                 "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
                                 "RUSSIA,3", "UNITED KINGDOM,3", "UNITED STATES,1"}
-        nations_collection_values = InsertData.populate_region_or_nation(
-            nations)
+        nations_collection_values = []
+
+        for i, val in enumerate(nations):
+            value = {
+                "nation_key": i,
+                "name": val,
+                "comment": InsertData.generate_random_data()
+            }
+            nations_collection_values.append(value)
         InitilizeDB.insert(
             InitilizeDB.DATABASE["nation"].name, nations_collection_values)
 
