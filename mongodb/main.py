@@ -5,7 +5,7 @@ from mongodb.insert_data import InsertData
 
 
 def main():
-    print("mongodb module")
+    print("Mongo db commands running...")
 
     task = Collections()
     task.create_collections()
