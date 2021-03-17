@@ -5,9 +5,12 @@ from faker import Faker
 
 
 class InsertData:
+    retail_prices = []
+
     def __init__(self, scale_factor):
         super().__init__()
         self.scale_factor = scale_factor
+        self.retail_prices = self.scale_factor * 200000
 
     @staticmethod
     def generate_random_data(max_length):
@@ -83,6 +86,7 @@ class InsertData:
 
             comments_index = comments_list.index(
                 key) if key in comments_list else -1
+
             complaints = InsertData.generate_random_data(
                 random.randint(1, 124))
             recommends = InsertData.generate_random_data(
@@ -108,7 +112,72 @@ class InsertData:
             InitilizeDB.insert(
                 InitilizeDB.DATABASE["supplier"].name, supplier_collection_values)
 
+    @staticmethod
+    def insert_part(self):
+        part_names = ["almond", "antique", "aquamarine", "azure", "beige", "bisque", "black", "blanched", "blue",
+                      "blush", "brown", "burlywood", "burnished", "chartreuse", "chiffon", "chocolate", "coral", "cornflower",
+                      "cornsilk", "cream", "cyan", "dark", "deep", "dim", "dodger", "drab", "firebrick", "floral", "forest",
+                      "frosted", "gainsboro", "ghost", "goldenrod", "green", "grey", "honeydew", "hot", "indian", "ivory",
+                      "khaki", "lace", "lavender", "lawn", "lemon", "light", "lime", "linen", "magenta", "maroon", "medium",
+                      "metallic", "midnight", "mint", "misty", "moccasin", "navajo", "navy", "olive", "orange", "orchid",
+                      "pale", "papaya", "peach", "peru", "pink", "plum", "powder", "puff", "purple", "red", "rose", "rosy",
+                      "royal", "saddle", "salmon", "sandy", "seashell", "sienna", "sky", "slate", "smoke", "snow", "spring",
+                      "steel", "tan", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "yellow"]
+
+        type_1 = ["STANDARD", "SMALL", "MEDIUM", "LARGE", "ECONOMY", "PROMO"]
+        type_2 = ["ANODIZED", "BURNISHED", "PLATED", "POLISHED", "BRUSHED"]
+        type_3 = ["TIN", "NICKEL", "BRASS", "STEEL", "COPPER"]
+        container_1 = ["SM", "LG", "MED", "JUMBO", "WRAP"]
+        container_2 = ["CASE", "BOX", "BAG",
+                       "JAR", "PKG", "PACK", "CAN", "DRUM"]
+        data_size = int(self.scale_factor * 200000)
+        keys = InsertData.generate_identifiers(200000)
+
+        for i in range(data_size):
+            key = keys.index(i)
+            selected_names = []
+            length = part_names.__len__()
+            while(len(selected_names) < 5):
+                index = random.randint(0, 91)
+                if(not selected_names.__contains__(part_names[index])):
+                    selected_names.append(part_names[index])
+
+            space = " "
+            name_string = space.join(selected_names)
+            M = random.randint(0, 5)
+            mfgr_string = f'Manufacturer#{M}'
+            brand = "Brand#" + str(M) + str(random.randint(0, 5))
+            type_string = type_1[random.randint(
+                0, 5)] + " " + type_2[random.randint(0, 4)] + " " + type_3[random.randint(0, 4)]
+
+            size_string = str(random.randint(0, 50))
+            container_string = container_1[random.randint(
+                0, 4)] + " " + container_2[random.randint(0, 7)]
+
+            price = (90000 + (key/10) % 20001 + 100 * key % 1000) / 100.0
+            # self.retail_prices
+            retail_price_string = '{:.2f}'.format(price)
+            p_comments = InsertData.generate_random_data(
+                random.randint(1, 124))
+
+            part_collection_values = []
+            value = {
+                "part_key": key,
+                "name": name_string,
+                "mfgr": mfgr_string,
+                "brand": brand,
+                "type": type_string,
+                "size": size_string,
+                "container": container_string,
+                "retail_price": retail_price_string,
+                "comment": p_comments
+            }
+            part_collection_values.append(value)
+            InitilizeDB.insert(
+                InitilizeDB.DATABASE["part"].name, part_collection_values)
+
     def insert_to_collections(self):
         InsertData.region()
         InsertData.insert_nation()
         InsertData.insert_supplier(self)
+        InsertData.insert_part(self)
