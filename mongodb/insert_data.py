@@ -1,16 +1,18 @@
 from mongodb.initialize_db import InitilizeDB
 import string
 import random
+from datetime import datetime, timedelta
+import numpy as np
 from faker import Faker
 
 
 class InsertData:
-    retail_prices = []
 
     def __init__(self, scale_factor):
         super().__init__()
         self.scale_factor = scale_factor
-        self.retail_prices = self.scale_factor * 200000
+        self.retail_prices = np.array(
+            [self.scale_factor * 200000], dtype='float')
 
     @staticmethod
     def generate_random_data(max_length):
@@ -74,6 +76,7 @@ class InsertData:
                 comments_list.append(index)
 
         fake = Faker("en_CA")
+
         for i in range(data_size):
             key = keys.index(i)
             formatted_key = '{:09d}'.format(key)
@@ -96,9 +99,7 @@ class InsertData:
                     comments = "Customer " + complaints + "Complaints"
                 else:
                     comments = "Customer " + recommends + "Recommends"
-
             supplier_collection_values = []
-
             value = {
                 "supplier_key": key,
                 "name": "Supplier#r"+formatted_key,
@@ -155,11 +156,11 @@ class InsertData:
                 0, 4)] + " " + container_2[random.randint(0, 7)]
 
             price = (90000 + (key/10) % 20001 + 100 * key % 1000) / 100.0
-            # self.retail_prices
+
+            # self.retail_prices[key] = price
             retail_price_string = '{:.2f}'.format(price)
             p_comments = InsertData.generate_random_data(
                 random.randint(1, 124))
-
             part_collection_values = []
             value = {
                 "part_key": key,
@@ -176,8 +177,206 @@ class InsertData:
             InitilizeDB.insert(
                 InitilizeDB.DATABASE["part"].name, part_collection_values)
 
+    @staticmethod
+    def insert_part_supplier(self):
+        S = int(self.scale_factor * 10000)
+        data_size = int(self.scale_factor * 200000)
+        keys = InsertData.generate_identifiers(200000)
+
+        for i in range(data_size):
+            key = keys.index(i)
+            for j in range(4):
+                part_supplier_key = (key+(i*((S/4)+(key-1)/S))) % S
+                part_supplier_avail_qty = random.randint(0, 9999)
+                length = random.randint(0, 150)
+                part_supplier_cost = '{:.2f}'.format(
+                    random.randint(0, 9999)/100.0)
+                part_supplier_comment = InsertData.generate_random_data(
+                    random.randint(1, 124))
+                part_supplier_collection_values = []
+                value = {
+                    "part_key": key,
+                    "supp_key": part_supplier_key,
+                    "avail_qty": part_supplier_avail_qty,
+                    "supply_cost": part_supplier_cost,
+                    "comment": part_supplier_comment
+                }
+                part_supplier_collection_values.append(value)
+                InitilizeDB.insert(
+                    InitilizeDB.DATABASE["partsupp"].name, part_supplier_collection_values)
+
+    @staticmethod
+    def insert_customer(self):
+        segments = ["AUTOMOBILE", "BUILDING",
+                    "FURNITURE", "MACHINERY", "HOUSEHOLD"]
+        data_size = int(self.scale_factor * 150000)
+        keys = InsertData.generate_identifiers(150000)
+        fake = Faker("en_CA")
+        for i in range(data_size):
+            key = keys.index(i)
+            customer_name = "Customer#"+'{:09d}'.format(key)
+            length = random.randint(0, 30)
+            address = InsertData.generate_random_data(
+                random.randint(1, 30))
+            nation = random.randint(0, 24)
+            phone = fake.phone_number()
+            acc_balance = balance = '{:.2f}'.format(
+                (random.randint(0, 1099999)-99999) / 100.0)
+            mkt_segment = segments[random.randint(0, 4)]
+            count = random.randint(0, 88)
+            comment_string = InsertData.generate_random_data(
+                random.randint(1, 124))
+
+            customer_collection_values = []
+            values = {
+                "cust_key": key,
+                "name": customer_name,
+                "address": address,
+                "nation_key": nation,
+                "phone": phone,
+                "acct_balance": acc_balance,
+                "mkt_segment": mkt_segment,
+                "comment": comment_string
+            }
+            customer_collection_values.append(values)
+            InitilizeDB.insert(
+                InitilizeDB.DATABASE["customer"].name, customer_collection_values)
+
+    @staticmethod
+    def insert_order_line_item(self):
+        priorities = ["1-URGENT", "2-HIGH",
+                      "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"]
+        instructs = ["DELIVER IN PERSON",
+                     "COLLECT COD", "NONE", "TAKE BACK RETURN"]
+        modes = ["REG AIR", "AIR", "RAIL", "SHIP", "TRUCK", "MAIL", "FOB"]
+        start_date = datetime.strptime("1992-1-1", "%Y-%m-%d")
+        current_date = datetime.strptime("1995-6-17", "%Y-%m-%d")
+        end_date = datetime.strptime("1998-12-31", "%Y-%m-%d")
+        order_size = int(self.scale_factor * 150000 * 4)
+        keys = keys = InsertData.generate_identifiers(150000 * 4)
+
+        days_range = 2405
+        for i in range(order_size):
+            key = keys.index(i)
+            if (key % 4) != 0:
+                continue
+            customer_key = 0
+            while (customer_key % 3) == 0:
+                customer_key = random.randint(
+                    0, int(self.scale_factor * 150000))
+            order_status = "P"
+            total_price = 0.0
+            order_date = start_date + timedelta(random.randint(1, days_range))
+            priority_string = priorities[random.randint(0, 4)]
+            clerk_string = "Clerk#" + '{:09d}'.format(random.randint(
+                0, int(self.scale_factor * 1000))+1)
+            ship_priority = "0"
+            order_comment = InsertData.generate_random_data(
+                random.randint(1, 124))
+
+            line_item_rows = random.randint(0, 7)
+            F_number = 0
+            O_number = 0
+
+            for j in range(line_item_rows):
+                L_order_key = key
+                part_key = random.randint(
+                    0, int(self.scale_factor * 200000))
+                S = int(self.scale_factor * 10000)
+                i = random.randint(0, 4)
+                supplier_key = (part_key+(i*((S/4)+(part_key-1)/S)))
+                line_number = j
+                quantity = random.randint(0, 50)
+
+                extended_price = 0.0
+
+                if (part_key < self.retail_prices.size):
+                    extended_price = quantity * self.retail_prices[part_key]
+                else:
+                    extended_price = quantity * self.retail_prices[0]
+
+                extended_price_str = '{:.2f}'.format(extended_price)
+                discount = random.randint(0, 10)/100.0
+                discount_str = '{:.2f}'.format(discount)
+                tax = random.randint(0, 8)/100.0
+                tax_str = '{:.2f}'.format(tax)
+                return_flag_str = "N"
+                line_status_str = "F"
+                ship_date = order_date + timedelta(random.randint(0, 121))
+                commit_date = order_date + timedelta(random.randint(0, 91))
+                receipt_date = ship_date + timedelta(random.randint(0, 30))
+                ship_instruct_str = instructs[random.randint(0, 3)]
+                ship_mode_str = modes[random.randint(0, 6)]
+                line_comment_str = InsertData.generate_random_data(
+                    random.randint(1, 124))
+
+                if(receipt_date > current_date):
+                    return_flag_str = "R" if (
+                        random.randint(0, 1) == 0) else "A"
+                if(ship_date < current_date):
+                    line_status_str = "O"
+
+                if(line_status_str == "O"):
+                    O_number = O_number + 1
+                else:
+                    F_number = F_number + 1
+
+                total_price += extended_price * (1+tax)*(1-discount)
+
+                line_items_collection_values = []
+
+                values = {
+                    "order_key": L_order_key,
+                    "part_key": part_key,
+                    "supp_key": supplier_key,
+                    "line_number": line_number,
+                    "quantity": quantity,
+                    "extended_price": extended_price,
+                    "discount": discount_str,
+                    "tax": tax_str,
+                    "return_flag": return_flag_str,
+                    "line_status": line_status_str,
+                    "ship_date": ship_date,
+                    "commit_date": commit_date,
+                    "receipt_date": receipt_date,
+                    "ship_instructions": ship_instruct_str,
+                    "ship_mode": ship_mode_str,
+                    "comment": line_comment_str
+                }
+                line_items_collection_values.append(values)
+                InitilizeDB.insert(
+                    InitilizeDB.DATABASE["orders"].name, line_items_collection_values)
+
+            if(F_number == line_item_rows):
+                order_status_str = "F"
+            if(O_number == line_item_rows):
+                order_status_str = "O"
+
+            total_price_str = '{:.2f}'.format(total_price)
+
+            line_items_collection_additional_values = []
+
+            additional_values = {
+                "order_key": key,
+                "cust_key": customer_key,
+                "order_status": order_status_str,
+                "total_price": total_price_str,
+                "order_date": order_date,
+                "order_priority": priority_string,
+                "clerk": clerk_string,
+                "ship_priority": ship_priority,
+                "comment": order_comment
+            }
+
+            line_items_collection_additional_values.append(additional_values)
+            InitilizeDB.insert(
+                InitilizeDB.DATABASE["orders"].name, line_items_collection_additional_values)
+
     def insert_to_collections(self):
         InsertData.region()
         InsertData.insert_nation()
         InsertData.insert_supplier(self)
         InsertData.insert_part(self)
+        InsertData.insert_part_supplier(self)
+        InsertData.insert_customer(self)
+        InsertData.insert_order_line_item(self)
