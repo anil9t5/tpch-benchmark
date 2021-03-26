@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import sys
-from pymongo import MongoClient
-
-# Init Mongo Client
-
-client = MongoClient('localhost', 27017)
-
-# Create New Database
-
-db = client.db_tpch
+from mongodb.collections import Collections
+from mongodb.insert_data import InsertData
 
 
 def main():
-    print("List of argument strings from mongodb module: %s" % sys.argv[1:])
+    print("Mongo db started...")
+
+    task = Collections()
+    task.create_collections()
+
+    insert_task = InsertData(0.05)
+    insert_task.insert_to_collections()
+
+    print("Successful!")
