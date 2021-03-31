@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import sys
 from postgresql.tables import Tables
+from postgresql.insert_data import InsertData
 import psycopg2
 
 
 def main():
     print("PostgreSQL db started...")
-    # print("List of argument strings from postgresql module: %s" % sys.argv[1:])
     task = Tables()
-    # task.drop_tables()
     task.create_tables()
+    insert_task = InsertData(0.05)
     print("Successful!")
