@@ -9,6 +9,6 @@ def main():
     print("PostgreSQL db started...")
     task = Tables()
     task.create_tables()
-    insert_task = InsertData(1)
+    insert_task = InsertData(0.05)
     insert_task.insert_to_tables()
     print("Successful!")

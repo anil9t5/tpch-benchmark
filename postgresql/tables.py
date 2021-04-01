@@ -14,17 +14,11 @@ class Tables:
                        "ORDERS", "LINEITEM", "NATION", "REGION")
 
         try:
-
-            # read the connection parameters
             params = config()
-
-            # connect to the PostgreSQL server
             conn = psycopg2.connect(**params)
-
-            # create a cursor to connect to database only once..
             cur = conn.cursor()
 
-            # Drop table each time to prevent duplicate tables...
+            # Empty database by dropping tables
             for table_name in table_names:
                 cur.execute("DROP TABLE IF EXISTS {};".format(table_name))
 

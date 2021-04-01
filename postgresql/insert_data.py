@@ -15,17 +15,14 @@ class InsertData:
         conn = None
 
         try:
-            # read the connection parameters
             params = config()
-
-            # connect to the PostgreSQL server
             conn = psycopg2.connect(**params)
-
-            # create a cursor to connect to database only once..
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 200000)
-            keys = InsertData.generate_identifiers(self.scale_factor * 200000)
+
+            keys = InsertData.generate_identifiers(int(self.scale_factor * 200000))
+
             part_names = ["almond", "antique", "aquamarine", "azure", "beige", "bisque", "black", "blanched", "blue",
                           "blush", "brown", "burlywood", "burnished", "chartreuse", "chiffon", "chocolate", "coral",
                           "cornflower", "cornsilk", "cream", "cyan", "dark", "deep", "dim", "dodger", "drab", "firebrick",
@@ -34,17 +31,16 @@ class InsertData:
                           "magenta", "maroon", "medium", "metallic", "midnight", "mint", "misty", "moccasin", "navajo",
                           "navy", "olive", "orange", "orchid", "pale", "papaya", "peach", "peru", "pink", "plum", "powder",
                           "puff", "purple", "red", "rose", "rosy", "royal", "saddle", "salmon", "sandy", "seashell",
-                          "sienna",
-                          "sky", "slate", "smoke", "snow", "spring", "steel", "tan", "thistle", "tomato", "turquoise",
-                          "violet",
-                          "wheat", "white", "yellow"]
+                          "sienna", "sky", "slate", "smoke", "snow", "spring", "steel", "tan", "thistle", "tomato", "turquoise",
+                          "violet", "wheat", "white", "yellow"]
+
             len_part_names = len(part_names)
 
             types_syllable_1 = ["STANDARD", "SMALL", "MEDIUM", "LARGE", "ECONOMY", "PROMO"]
             types_syllable_2 = ["ANODIZED", "BURNISHED", "PLATED", "POLISHED", "BRUSHED"]
             types_syllable_3 = ["TIN", "NICKEL", "BRASS", "STEEL", "COPPER"]
 
-            containers_syllable_1=["SM", "LG", "MED", "JUMBO", "WRAP"]
+            containers_syllable_1 = ["SM", "LG", "MED", "JUMBO", "WRAP"]
             containers_syllable_2 = ["CASE", "BOX", "BAG", "JAR", "PKG", "PACK", "CAN", "DRUM"]
 
 
@@ -52,10 +48,9 @@ class InsertData:
 
                 P_PARTKEY= keys.index(i)
 
-
                 random_names=[]
                 while (len(random_names)<5):
-                    random_index = random.randint(0,len_part_names)
+                    random_index = random.randint(0,(len_part_names-1))
                     if (not random_names.__contains__(part_names[random_index])):
                         random_names.append(part_names[random_index])
                 space_char=" "
@@ -81,14 +76,6 @@ class InsertData:
 
                 P_COMMENT=InsertData.generate_random_string_data(random.randint(5, 22))
 
-                one_PART_row = []
-
-                # print(P_PARTKEY)
-                # print(P_NAME, P_MFGR, P_BRAND, P_TYPE)
-                # print(P_SIZE)
-                # print(P_CONTAINER)
-                # print(P_RETAILPRICE)
-                # print(P_COMMENT)
                 cur.execute("INSERT INTO PART(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(str(P_PARTKEY), P_NAME, P_MFGR, P_BRAND, P_TYPE, str(P_SIZE), P_CONTAINER, str(P_RETAILPRICE),  P_COMMENT))
 
             cur.close()
