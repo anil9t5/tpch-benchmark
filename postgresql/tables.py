@@ -26,7 +26,7 @@ class Tables:
             """ create tables in the PostgreSQL database"""
             commands = (
                 """
-                CREATE TABLE IF NOT EXISTS PART(
+                CREATE TABLE PART(
                     P_PARTKEY BIGINT NOT NULL PRIMARY KEY,
                     P_NAME VARCHAR(55),
                     P_MFGR CHAR(25),
@@ -39,7 +39,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS SUPPLIER(
+                CREATE TABLE SUPPLIER(
                     S_SUPPKEY BIGINT NOT NULL PRIMARY KEY,
                     S_NAME CHAR(25),
                     S_ADDRESS VARCHAR(40),
@@ -50,7 +50,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS PARTSUPP(
+                CREATE TABLE PARTSUPP(
                     PS_PARTKEY BIGINT NOT NULL,
                     PS_SUPPKEY BIGINT NOT NULL,
                     PS_AVAILQTY INTEGER,
@@ -60,7 +60,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS CUSTOMER(
+                CREATE TABLE CUSTOMER(
                     C_CUSTKEY BIGINT NOT NULL PRIMARY KEY,
                     C_NAME VARCHAR(25),
                     C_ADDRESS VARCHAR(40),
@@ -72,7 +72,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS ORDERS(
+                CREATE TABLE ORDERS(
                     O_ORDERKEY BIGINT NOT NULL PRIMARY KEY,
                     O_CUSTKEY BIGINT,
                     O_ORDERSTATUS CHAR(1),
@@ -85,7 +85,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS LINEITEM(
+                CREATE TABLE LINEITEM(
                     L_ORDERKEY BIGINT NOT NULL,
                     L_PARTKEY BIGINT,
                     L_SUPPKEY BIGINT,
@@ -106,7 +106,7 @@ class Tables:
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS NATION(
+                CREATE TABLE NATION(
                     N_NATIONKEY BIGINT NOT NULL PRIMARY KEY,
                     N_NAME CHAR(25),
                     N_REGIONKEY BIGINT,

@@ -4,21 +4,24 @@ from string import ascii_lowercase
 import psycopg2
 from postgresql.config import config
 
+params = config()
+conn = psycopg2.connect(**params)
+cur = conn.cursor()
+
 class InsertData:
+
 
     def __init__(self, scale_factor):
         super().__init__()
         self.scale_factor = scale_factor
 
+
+    #----Inser Part
     @staticmethod
     def insert_PART(self):
         conn = None
 
         try:
-            params = config()
-            conn = psycopg2.connect(**params)
-            cur = conn.cursor()
-
             data_size = int(self.scale_factor * 200000)
 
             keys = InsertData.generate_identifiers(int(self.scale_factor * 200000))
@@ -78,16 +81,42 @@ class InsertData:
 
                 cur.execute("INSERT INTO PART(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(str(P_PARTKEY), P_NAME, P_MFGR, P_BRAND, P_TYPE, str(P_SIZE), P_CONTAINER, str(P_RETAILPRICE),  P_COMMENT))
 
-            cur.close()
-            conn.commit()
+
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-        finally:
-            if conn is not None:
-                conn.close()
+        # finally:
 
+
+
+
+    # ----Insert SUPPLIER
+    @staticmethod
+    def insert_SUPPLIER(self):
+        pass
+
+        # data_size = int(self.scale_factor * 10000)
+        #
+        # S_SUPPKEY=random.randint(int(self.scale_factor*10000))
+        #
+        #
+        # S_NAME = "Supplier#r"+"{:09d}".format(S_SUPPKEY)
+        # print(S_NAME)
+
+
+
+        # S_ADDRESS
+        #
+        # S_NATIONKEY
+        #
+        # S_ACCTBAL
+        #
+        # S_COMMENT
+
+
+
+    #----
     @staticmethod
     def generate_identifiers(value):
         keys = []
@@ -103,3 +132,10 @@ class InsertData:
 
     def insert_to_tables(self):
         InsertData.insert_PART(self)
+        InsertData.insert_SUPPLIER(self)
+
+        cur.close()
+        conn.commit()
+        if conn is not None:
+            conn.close()
+
