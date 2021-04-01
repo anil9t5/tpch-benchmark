@@ -83,7 +83,13 @@ class InsertData:
 
                 one_PART_row = []
 
-                cur.execute('''INSERT INTO PART(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT) VALUES ({0}, '{1}', '{2}', '{3}', '{4}', {5}, '{6}', {7}, '{8}')''').format(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT)
+                # print(P_PARTKEY)
+                # print(P_NAME, P_MFGR, P_BRAND, P_TYPE)
+                # print(P_SIZE)
+                # print(P_CONTAINER)
+                # print(P_RETAILPRICE)
+                # print(P_COMMENT)
+                cur.execute("INSERT INTO PART(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(str(P_PARTKEY), P_NAME, P_MFGR, P_BRAND, P_TYPE, str(P_SIZE), P_CONTAINER, str(P_RETAILPRICE),  P_COMMENT))
 
             cur.close()
             conn.commit()
@@ -108,3 +114,5 @@ class InsertData:
         res = ''.join(choice(ascii_lowercase) for i in range(string_length))
         return res
 
+    def insert_to_tables(self):
+        InsertData.insert_PART(self)
