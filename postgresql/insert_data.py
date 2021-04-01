@@ -3,10 +3,7 @@ from random import choice
 from string import ascii_lowercase
 import psycopg2
 from postgresql.config import config
-
-params = config()
-conn = psycopg2.connect(**params)
-cur = conn.cursor()
+from faker import Faker
 
 class InsertData:
 
@@ -20,11 +17,16 @@ class InsertData:
     @staticmethod
     def insert_PART(self):
         conn = None
-
         try:
+
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
             data_size = int(self.scale_factor * 200000)
 
-            keys = InsertData.generate_identifiers(int(self.scale_factor * 200000))
+            keys=list(range(data_size))
+            random.shuffle(keys)
 
             part_names = ["almond", "antique", "aquamarine", "azure", "beige", "bisque", "black", "blanched", "blue",
                           "blush", "brown", "burlywood", "burnished", "chartreuse", "chiffon", "chocolate", "coral",
@@ -49,7 +51,7 @@ class InsertData:
 
             for i in range(data_size):
 
-                P_PARTKEY= keys.index(i)
+                P_PARTKEY= keys[i]
 
                 random_names=[]
                 while (len(random_names)<5):
@@ -81,48 +83,155 @@ class InsertData:
 
                 cur.execute("INSERT INTO PART(P_PARTKEY, P_NAME, P_MFGR, P_BRAND,  P_TYPE,  P_SIZE,  P_CONTAINER,  P_RETAILPRICE,  P_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",(str(P_PARTKEY), P_NAME, P_MFGR, P_BRAND, P_TYPE, str(P_SIZE), P_CONTAINER, str(P_RETAILPRICE),  P_COMMENT))
 
-
+            cur.close()
+            conn.commit()
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-        # finally:
-
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 
     # ----Insert SUPPLIER
     @staticmethod
     def insert_SUPPLIER(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
+            data_size = int(self.scale_factor * 10000)
+
+            keys = list(range(data_size))
+            random.shuffle(keys)
+
+            comment_ratio = int(self.scale_factor * 5)
+
+            for i in range(data_size):
+                S_SUPPKEY = keys[i]
+                S_NAME = "Supplier#r"+"{:09d}".format(S_SUPPKEY)
+
+                S_ADDRESS =InsertData.generate_random_string_data(random.randint(10, 40))
+
+                S_NATIONKEY =random.randint(0, 24)
+
+                nations_code=random.randint(0,25)
+                country_code=nations_code+10
+                local_number1=random.randint(100, 999)
+                local_number2 = random.randint(100, 999)
+                local_number3 = random.randint(1000, 9999)
+                S_PHONE=str(country_code)+ "-"+ str(local_number1)+"-"+str(local_number2)+"-"+str(local_number3)
+
+                S_ACCTBAL='{:.2f}'.format(random.uniform(-999.99, 9999.99))
+
+                comment=InsertData.generate_random_string_data(random.randint(25, 100))
+                if S_SUPPKEY<comment_ratio:
+                    while (comment<25 or comment>100):
+                        comment=InsertData.generate_random_string_data(random.randint(0, 20))+"Customer " + InsertData.generate_random_string_data(random.randint(0, 20)) + "Complaints"+InsertData.generate_random_string_data(random.randint(0, 20))
+                if S_SUPPKEY > data_size-comment_ratio:
+                    while (comment < 25 or comment > 100):
+                        comment=InsertData.generate_random_string_data(random.randint(0, 20))+"Customer " + InsertData.generate_random_string_data(random.randint(0, 20)) + "Recommends"+InsertData.generate_random_string_data(random.randint(0, 20))
+                S_COMMENT = comment
+
+                cur.execute(
+                    "INSERT INTO SUPPLIER(S_SUPPKEY, S_NAME, S_ADDRESS, S_NATIONKEY,  S_PHONE,  S_ACCTBAL,  S_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (str(S_SUPPKEY), S_NAME, S_ADDRESS, str(S_NATIONKEY), S_PHONE, str(S_ACCTBAL), S_COMMENT))
+
+            cur.close()
+            conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
+
+    # ----Insert SUPPLIER
+    @staticmethod
+    def insert_PARTSUPP(self):
+        pass
+        # conn = None
+        # try:
+        #     params = config()
+        #     conn = psycopg2.connect(**params)
+        #     cur = conn.cursor()
+        #
+        #     data_size=
+        #     #Keys generated in part table
+        #     keys = list(range(int(self.scale_factor * 200000)))
+        #
+        #
+        #     for i in range(data_size):
+        #         PS_PARTKEY = keys[i]
+        #         PS_SUPPKEY =
+
+
+
+
+
+
+
+            # cur.close()
+            # conn.commit()
+
+        # except (Exception, psycopg2.DatabaseError) as error:
+        #     print(error)
+        #
+        # finally:
+        #     if conn is not None:
+        #         conn.close()
+
+#==================================================
+    # ----Insert PARTSUPP
+    @staticmethod
+    def insert_PARTSUPP(self):
         pass
 
-        # data_size = int(self.scale_factor * 10000)
-        #
-        # S_SUPPKEY=random.randint(int(self.scale_factor*10000))
-        #
-        #
-        # S_NAME = "Supplier#r"+"{:09d}".format(S_SUPPKEY)
-        # print(S_NAME)
 
-
-
-        # S_ADDRESS
-        #
-        # S_NATIONKEY
-        #
-        # S_ACCTBAL
-        #
-        # S_COMMENT
-
-
-
-    #----
+    # ----Insert CUSTOMER
     @staticmethod
-    def generate_identifiers(value):
-        keys = []
-        for i in range(value):
-            keys.append(i)
-        return keys
+    def insert_CUSTOMER(self):
+        pass
+
+
+    # ----Insert CUSTOMER
+    @staticmethod
+    def insert_CUSTOMER(self):
+        pass
+
+    # ----Insert ORDERS
+    @staticmethod
+    def insert_ORDERS(self):
+        pass
+
+
+    # ----Insert LINEITEM
+    @staticmethod
+    def insert_LINEITEM(self):
+        pass
+
+    # ----Insert NATION
+    @staticmethod
+    def insert_NATION(self):
+        pass
+
+    # ----Insert REGION
+    @staticmethod
+    def insert_REGION(self):
+            pass
+
+    #-------------------------------------------
+    # @staticmethod
+    # def generate_identifiers(value):
+    #     keys = []
+    #     for i in range(value):
+    #         keys.append(i)
+    #     return keys
 
     @staticmethod
     def generate_random_string_data(string_length):
@@ -133,9 +242,7 @@ class InsertData:
     def insert_to_tables(self):
         InsertData.insert_PART(self)
         InsertData.insert_SUPPLIER(self)
+        InsertData.insert_PARTSUPP(self)
 
-        cur.close()
-        conn.commit()
-        if conn is not None:
-            conn.close()
+
 
