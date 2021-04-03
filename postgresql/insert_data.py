@@ -4,8 +4,6 @@ from string import ascii_lowercase
 import psycopg2
 from postgresql.config import config
 from datetime import datetime, timedelta
-import numpy as np
-
 
 class InsertData:
     def __init__(self, scale_factor):
