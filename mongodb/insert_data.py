@@ -68,7 +68,7 @@ class InsertData:
         data_size = int(self.scale_factor * 10000)
         keys = InsertData.generate_identifiers(data_size)
         comments_list = []
-        commented_size = int(10 * self.scale_factor)
+        commented_size = int(5 * self.scale_factor)
 
         while(len(comments_list) < commented_size):
             index = random.randint(0, data_size)
@@ -81,10 +81,15 @@ class InsertData:
             key = keys.index(i)
             formatted_key = '{:09d}'.format(key)
             address_data = InsertData.generate_random_data(
-                random.randint(1, 30))
-            phone = fake.phone_number()
-            balance = '{:.2f}'.format(
-                (random.randint(0, 1099999)-99999) / 100.0)
+                random.randint(10, 40))
+            nation_key = random.randint(0, 24)
+            country_code = nation_key+10
+            local_number1 = random.randint(100, 999)
+            local_number2 = random.randint(100, 999)
+            local_number3 = random.randint(1000, 9999)
+            S_PHONE = str(country_code) + "-" + str(local_number1) + \
+                "-"+str(local_number2)+"-"+str(local_number3)
+            balance = '{:.2f}'.format(random.uniform(-999.99, 9999.99))
             comments = "No comments..."
 
             comments_index = comments_list.index(
@@ -104,7 +109,7 @@ class InsertData:
                 "supplier_key": key,
                 "name": "Supplier#r"+formatted_key,
                 "address": address_data,
-                "nation_key": random.randint(0, 25),
+                "nation_key": nation_key,
                 "phone": phone,
                 "acct_bal": balance,
                 "comment": InsertData.generate_random_data(random.randint(1, 100))
@@ -160,7 +165,7 @@ class InsertData:
             # self.retail_prices[key] = price
             retail_price_string = '{:.2f}'.format(price)
             p_comments = InsertData.generate_random_data(
-                random.randint(1, 124))
+                random.randint(5, 22))
             part_collection_values = []
             value = {
                 "part_key": key,
@@ -218,10 +223,9 @@ class InsertData:
             length = random.randint(0, 30)
             address = InsertData.generate_random_data(
                 random.randint(1, 30))
-            nation = random.randint(0, 24)
+            nation_key = random.randint(0, 24)
             phone = fake.phone_number()
-            acc_balance = balance = '{:.2f}'.format(
-                (random.randint(0, 1099999)-99999) / 100.0)
+            acc_balance = '{:.2f}'.format(random.uniform(-999.99, 9999.99))
             mkt_segment = segments[random.randint(0, 4)]
             count = random.randint(0, 88)
             comment_string = InsertData.generate_random_data(
@@ -232,7 +236,7 @@ class InsertData:
                 "cust_key": key,
                 "name": customer_name,
                 "address": address,
-                "nation_key": nation,
+                "nation_key": nation_key,
                 "phone": phone,
                 "acct_balance": acc_balance,
                 "mkt_segment": mkt_segment,
