@@ -25,5 +25,5 @@ var/
 pip-log.txt
 pip-delete-this-directory.txt
 
-postgresql/database.ini
+database.ini
 venv/
