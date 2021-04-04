@@ -30,7 +30,7 @@ class InsertData:
             value = {
                 "region_key": i,
                 "name": val,
-                "comment": InsertData.generate_random_data(random.randint(1, 100))
+                "comment": InsertData.generate_random_data(random.randint(31, 115))
             }
             region_collection_values.append(value)
         InitilizeDB.insert(
@@ -49,7 +49,7 @@ class InsertData:
                 "nation_key": i,
                 "name": val,
                 "region_key": random.randint(0, 25),
-                "comment": InsertData.generate_random_data(random.randint(1, 100))
+                "comment": InsertData.generate_random_data(random.randint(31, 114))
             }
             nations_collection_values.append(value)
         InitilizeDB.insert(
@@ -66,7 +66,8 @@ class InsertData:
     @staticmethod
     def insert_supplier(self):
         data_size = int(self.scale_factor * 10000)
-        keys = InsertData.generate_identifiers(data_size)
+        keys = keys = list(range(data_size))
+        random.shuffle(keys)
         comments_list = []
         commented_size = int(5 * self.scale_factor)
 
@@ -74,8 +75,6 @@ class InsertData:
             index = random.randint(0, data_size)
             if(not comments_list.__contains__(index)):
                 comments_list.append(index)
-
-        fake = Faker("en_CA")
 
         for i in range(data_size):
             key = keys.index(i)
@@ -87,7 +86,7 @@ class InsertData:
             local_number1 = random.randint(100, 999)
             local_number2 = random.randint(100, 999)
             local_number3 = random.randint(1000, 9999)
-            S_PHONE = str(country_code) + "-" + str(local_number1) + \
+            phone = str(country_code) + "-" + str(local_number1) + \
                 "-"+str(local_number2)+"-"+str(local_number3)
             balance = '{:.2f}'.format(random.uniform(-999.99, 9999.99))
             comments = "No comments..."
@@ -112,7 +111,7 @@ class InsertData:
                 "nation_key": nation_key,
                 "phone": phone,
                 "acct_bal": balance,
-                "comment": InsertData.generate_random_data(random.randint(1, 100))
+                "comment": InsertData.generate_random_data(random.randint(25, 100))
             }
             supplier_collection_values.append(value)
             InitilizeDB.insert(
@@ -137,7 +136,9 @@ class InsertData:
         container_2 = ["CASE", "BOX", "BAG",
                        "JAR", "PKG", "PACK", "CAN", "DRUM"]
         data_size = int(self.scale_factor * 200000)
-        keys = InsertData.generate_identifiers(200000)
+
+        keys = list(range(data_size))
+        random.shuffle(keys)
 
         for i in range(data_size):
             key = keys.index(i)
@@ -150,13 +151,13 @@ class InsertData:
 
             space = " "
             name_string = space.join(selected_names)
-            M = random.randint(0, 5)
+            M = random.randint(1, 5)
             mfgr_string = f'Manufacturer#{M}'
-            brand = "Brand#" + str(M) + str(random.randint(0, 5))
+            brand = "Brand#" + str(M) + str(random.randint(1, 5))
             type_string = type_1[random.randint(
                 0, 5)] + " " + type_2[random.randint(0, 4)] + " " + type_3[random.randint(0, 4)]
 
-            size_string = str(random.randint(0, 50))
+            size_string = str(random.randint(1, 50))
             container_string = container_1[random.randint(
                 0, 4)] + " " + container_2[random.randint(0, 7)]
 
@@ -186,18 +187,17 @@ class InsertData:
     def insert_part_supplier(self):
         S = int(self.scale_factor * 10000)
         data_size = int(self.scale_factor * 200000)
-        keys = InsertData.generate_identifiers(200000)
+        keys = list(range(data_size))
 
         for i in range(data_size):
             key = keys.index(i)
             for j in range(4):
                 part_supplier_key = (key+(i*((S/4)+(key-1)/S))) % S
-                part_supplier_avail_qty = random.randint(0, 9999)
+                part_supplier_avail_qty = random.randint(1, 9999)
                 length = random.randint(0, 150)
-                part_supplier_cost = '{:.2f}'.format(
-                    random.randint(0, 9999)/100.0)
+                part_supplier_cost = random.uniform(1.0, 1000.0)
                 part_supplier_comment = InsertData.generate_random_data(
-                    random.randint(1, 124))
+                    random.randint(49, 198))
                 part_supplier_collection_values = []
                 value = {
                     "part_key": key,
@@ -215,8 +215,9 @@ class InsertData:
         segments = ["AUTOMOBILE", "BUILDING",
                     "FURNITURE", "MACHINERY", "HOUSEHOLD"]
         data_size = int(self.scale_factor * 150000)
-        keys = InsertData.generate_identifiers(150000)
-        fake = Faker("en_CA")
+        keys = list(range(data_size))
+        random.shuffle(keys)
+
         for i in range(data_size):
             key = keys.index(i)
             customer_name = "Customer#"+'{:09d}'.format(key)
@@ -224,12 +225,17 @@ class InsertData:
             address = InsertData.generate_random_data(
                 random.randint(1, 30))
             nation_key = random.randint(0, 24)
-            phone = fake.phone_number()
-            acc_balance = '{:.2f}'.format(random.uniform(-999.99, 9999.99))
+            country_code = nation_key + 10
+            local_number1 = random.randint(100, 999)
+            local_number2 = random.randint(100, 999)
+            local_number3 = random.randint(1000, 9999)
+            phone = str(country_code) + "-" + str(local_number1) + \
+                "-" + str(local_number2) + "-" + str(local_number3)
+            acc_balance = random.uniform(-999.99, 9999.99)
             mkt_segment = segments[random.randint(0, 4)]
             count = random.randint(0, 88)
             comment_string = InsertData.generate_random_data(
-                random.randint(1, 124))
+                random.randint(29, 116))
 
             customer_collection_values = []
             values = {
@@ -257,7 +263,8 @@ class InsertData:
         current_date = datetime.strptime("1995-6-17", "%Y-%m-%d")
         end_date = datetime.strptime("1998-12-31", "%Y-%m-%d")
         order_size = int(self.scale_factor * 150000 * 4)
-        keys = keys = InsertData.generate_identifiers(150000 * 4)
+        keys = list(range(order_size))
+        random.shuffle(keys)
 
         days_range = 2405
         for i in range(order_size):
@@ -272,13 +279,14 @@ class InsertData:
             total_price = 0.0
             order_date = start_date + timedelta(random.randint(1, days_range))
             priority_string = priorities[random.randint(0, 4)]
-            clerk_string = "Clerk#" + '{:09d}'.format(random.randint(
-                0, int(self.scale_factor * 1000))+1)
+            clerk_string = "Clerk#" + \
+                '{:09d}'.format(random.randint(
+                    1, int(self.scale_factor * 1000)))
             ship_priority = "0"
             order_comment = InsertData.generate_random_data(
-                random.randint(1, 124))
+                random.randint(19, 78))
 
-            line_item_rows = random.randint(0, 7)
+            line_item_rows = random.randint(1, 7)
             F_number = 0
             O_number = 0
 
@@ -306,13 +314,13 @@ class InsertData:
                 tax_str = '{:.2f}'.format(tax)
                 return_flag_str = "N"
                 line_status_str = "F"
-                ship_date = order_date + timedelta(random.randint(0, 121))
-                commit_date = order_date + timedelta(random.randint(0, 91))
-                receipt_date = ship_date + timedelta(random.randint(0, 30))
+                ship_date = order_date + timedelta(random.randint(1, 121))
+                commit_date = order_date + timedelta(random.randint(30, 90))
+                receipt_date = ship_date + timedelta(random.randint(1, 30))
                 ship_instruct_str = instructs[random.randint(0, 3)]
                 ship_mode_str = modes[random.randint(0, 6)]
                 line_comment_str = InsertData.generate_random_data(
-                    random.randint(1, 124))
+                    random.randint(10, 43))
 
                 if(receipt_date > current_date):
                     return_flag_str = "R" if (
