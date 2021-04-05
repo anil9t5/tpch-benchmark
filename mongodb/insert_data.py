@@ -3,13 +3,13 @@ import string
 import random
 from datetime import datetime, timedelta
 import numpy as np
-from faker import Faker
 
 
 class InsertData:
 
-    def __init__(self, scale_factor):
+    def __init__(self, scale_factor, db):
         super().__init__()
+        self.db = db
         self.scale_factor = scale_factor
         self.retail_prices = np.array(
             [self.scale_factor * 200000], dtype='float')
@@ -22,7 +22,7 @@ class InsertData:
         return res
 
     @staticmethod
-    def region():
+    def region(self):
         region_names = {"AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"}
         region_collection_values = []
 
@@ -33,11 +33,12 @@ class InsertData:
                 "comment": InsertData.generate_random_data(random.randint(31, 115))
             }
             region_collection_values.append(value)
-        InitilizeDB.insert(
-            InitilizeDB.DATABASE["region"].name, region_collection_values)
+
+        self.db["region"].insert(
+            region_collection_values)
 
     @staticmethod
-    def insert_nation():
+    def insert_nation(self):
         nations = {"ALGERIA,0", "ARGENTINA,1", "BRAZIL,1", "CANADA,1", "EGYPT,4", "ETHIOPIA,0",
                                 "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
                                 "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
@@ -52,8 +53,9 @@ class InsertData:
                 "comment": InsertData.generate_random_data(random.randint(31, 114))
             }
             nations_collection_values.append(value)
-        InitilizeDB.insert(
-            InitilizeDB.DATABASE["nation"].name, nations_collection_values)
+
+        self.db["nation"].insert(
+            nations_collection_values)
 
     @staticmethod
     def generate_identifiers(value):
@@ -114,8 +116,9 @@ class InsertData:
                 "comment": InsertData.generate_random_data(random.randint(25, 100))
             }
             supplier_collection_values.append(value)
-            InitilizeDB.insert(
-                InitilizeDB.DATABASE["supplier"].name, supplier_collection_values)
+
+            self.db["supplier"].insert(
+                supplier_collection_values)
 
     @staticmethod
     def insert_part(self):
@@ -180,8 +183,9 @@ class InsertData:
                 "comment": p_comments
             }
             part_collection_values.append(value)
-            InitilizeDB.insert(
-                InitilizeDB.DATABASE["part"].name, part_collection_values)
+
+            self.db["part"].insert(
+                part_collection_values)
 
     @staticmethod
     def insert_part_supplier(self):
@@ -207,8 +211,9 @@ class InsertData:
                     "comment": part_supplier_comment
                 }
                 part_supplier_collection_values.append(value)
-                InitilizeDB.insert(
-                    InitilizeDB.DATABASE["partsupp"].name, part_supplier_collection_values)
+
+                self.db["partsupp"].insert(
+                    part_supplier_collection_values)
 
     @staticmethod
     def insert_customer(self):
@@ -249,8 +254,8 @@ class InsertData:
                 "comment": comment_string
             }
             customer_collection_values.append(values)
-            InitilizeDB.insert(
-                InitilizeDB.DATABASE["customer"].name, customer_collection_values)
+            self.db["customer"].insert(
+                customer_collection_values)
 
     @staticmethod
     def insert_order_line_item(self):
@@ -308,9 +313,9 @@ class InsertData:
                     extended_price = quantity * self.retail_prices[0]
 
                 extended_price_str = '{:.2f}'.format(extended_price)
-                discount = random.randint(0, 10)/100.0
-                discount_str = '{:.2f}'.format(discount)
-                tax = random.randint(0, 8)/100.0
+                l_discount = random.uniform(0.0, 0.10)
+                discount_str = str(l_discount)
+                tax = random.uniform(0.0, 0.08)
                 tax_str = '{:.2f}'.format(tax)
                 return_flag_str = "N"
                 line_status_str = "F"
@@ -333,31 +338,32 @@ class InsertData:
                 else:
                     F_number = F_number + 1
 
-                total_price += extended_price * (1+tax)*(1-discount)
+                total_price += extended_price * (1+tax)*(1-l_discount)
 
                 line_items_collection_values = []
 
                 values = {
-                    "order_key": L_order_key,
-                    "part_key": part_key,
-                    "supp_key": supplier_key,
-                    "line_number": line_number,
-                    "quantity": quantity,
-                    "extended_price": extended_price,
-                    "discount": discount_str,
-                    "tax": tax_str,
-                    "return_flag": return_flag_str,
-                    "line_status": line_status_str,
-                    "ship_date": ship_date,
-                    "commit_date": commit_date,
-                    "receipt_date": receipt_date,
-                    "ship_instructions": ship_instruct_str,
-                    "ship_mode": ship_mode_str,
-                    "comment": line_comment_str
+                    "l_orderkey": L_order_key,
+                    "l_partkey": part_key,
+                    "l_suppkey": supplier_key,
+                    "l_linenumber": line_number,
+                    "l_quantity": quantity,
+                    "l_extendedprice": extended_price,
+                    "l_discount": l_discount,
+                    "l_tax": tax,
+                    "l_returnflag": return_flag_str,
+                    "l_linestatus": line_status_str,
+                    "l_shipdate": ship_date,
+                    "l_commitdate": commit_date,
+                    "l_receiptdate": receipt_date,
+                    "l_shipinstruct": ship_instruct_str,
+                    "l_shipmode": ship_mode_str,
+                    "l_comment": line_comment_str
                 }
                 line_items_collection_values.append(values)
-                InitilizeDB.insert(
-                    InitilizeDB.DATABASE["orders"].name, line_items_collection_values)
+
+                self.db["lineitem"].insert(
+                    line_items_collection_values)
 
             if(F_number == line_item_rows):
                 order_status_str = "F"
@@ -381,12 +387,12 @@ class InsertData:
             }
 
             line_items_collection_additional_values.append(additional_values)
-            InitilizeDB.insert(
-                InitilizeDB.DATABASE["orders"].name, line_items_collection_additional_values)
+            self.db["orders"].insert(
+                line_items_collection_additional_values)
 
     def insert_to_collections(self):
-        InsertData.region()
-        InsertData.insert_nation()
+        InsertData.region(self)
+        InsertData.insert_nation(self)
         InsertData.insert_supplier(self)
         InsertData.insert_part(self)
         InsertData.insert_part_supplier(self)
