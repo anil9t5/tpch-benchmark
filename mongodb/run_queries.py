@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from mongodb.query1 import Query1
 from mongodb.query3 import Query3
+from mongodb.query5 import Query5
 
 
 class RunQueries:
@@ -13,3 +14,7 @@ class RunQueries:
 
         query3 = Query3()
         query3.execute()
+
+        query5 = Query5()
+        query5.execute()
+
