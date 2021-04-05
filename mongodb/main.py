@@ -2,15 +2,22 @@
 import sys
 from mongodb.collections import Collections
 from mongodb.insert_data import InsertData
+from mongodb.run_queries import RunQueries
+from mongodb.initialize_db import InitilizeDB
 
 
 def main():
     print("Mongo db started...")
+    db = InitilizeDB.init()
+    create_collections = False
+    if create_collections:
+        task = Collections(db)
+        task.create_collections()
 
-    task = Collections()
-    task.create_collections()
-
-    insert_task = InsertData(0.05)
-    insert_task.insert_to_collections()
+        insert_task = InsertData(0.05, db)
+        insert_task.insert_to_collections()
+    else:
+        query = RunQueries()
+        query.run_queries()
 
     print("Successful!")
