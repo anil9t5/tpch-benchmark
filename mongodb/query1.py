@@ -17,7 +17,7 @@ class Query1:
                 {
                     "$match": {
                         "l_shipdate": {
-                            "$lte": datetime.datetime(1998, 8, 1)
+                            "$lte": datetime.datetime(1998, 12, 1)
                         }
                     }
                 },
