@@ -10,14 +10,14 @@ def main():
     print("Mongo db started...")
     db = InitilizeDB.init()
     create_collections = False
-    # if create_collections:
-    task = Collections(db)
-    task.create_collections()
+    if create_collections:
+        task = Collections(db)
+        task.create_collections()
 
-    insert_task = InsertData(0.05, db)
-    insert_task.insert_to_collections()
-    # else:
-    query = RunQueries()
-    query.run_queries()
+        insert_task = InsertData(0.05, db)
+        insert_task.insert_to_collections()
+    else:
+        query = RunQueries()
+        query.run_queries()
 
     print("Successful!")
