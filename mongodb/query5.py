@@ -54,26 +54,16 @@ class Query5:
                 },
                 {"$lookup": {
                     "from": "supplier",
-                    "let": {"nationkey": "$nation_key", "supkey": "$supplier_key"},
-                    "pipeline": [
-                        {"$match":
-                            {"$expr":
-                                {"$and":
-                                    [
-                                        {"$eq": ["$customer_docs.nation_key", "$$nationkey"]},
-                                        {"$eq": ["$lineitem_docs.l_suppkey", "$$supkey"]}
-                                    ]
-                                }
-                            }
-                        }
-                    ],
+                    "localField": "lineitem_docs.l_suppkey",
+                    "foreignField": "supplier_key",
                     "as": "supplier_docs"
-                    }
-                },
+                }},
                 {
                     "$unwind": "$supplier_docs"
+                },
+                {"$match":
+                     {"customer_docs.nation_key":"supplier_docs.nation_key"}
                 }
-
             ]
 
             start_time = time.time()
@@ -87,6 +77,9 @@ class Query5:
 
         except errors.ServerSelectionTimeoutError as err:
             print("pymongo ERROR:", err)
+
+
+
 
 
 
