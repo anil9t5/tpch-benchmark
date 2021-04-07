@@ -1,5 +1,4 @@
 from mongodb.initialize_db import InitilizeDB
-from bson.son import SON
 from pymongo import errors
 import datetime
 import time
@@ -53,29 +52,27 @@ class Query5:
                 {
                     "$unwind": "$lineitem_docs"
                 },
+                {"$lookup": {
+                    "from": "supplier",
+                    "let": {"nationkey": "$nation_key", "supkey": "$supplier_key"},
+                    "pipeline": [
+                        {"$match":
+                            {"$expr":
+                                {"$and":
+                                    [
+                                        {"$eq": ["$customer_docs.nation_key", "$$nationkey"]},
+                                        {"$eq": ["$lineitem_docs.l_suppkey", "$$supkey"]}
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    "as": "supplier_docs"
+                    }
+                },
                 {
-
+                    "$unwind": "$supplier_docs"
                 }
-
-                # {"$lookup": {
-                #     "from": "supplier",
-                #     "localField": "customer_docs.nation_key",
-                #     "foreignField": "nation_key",
-                #     "as": "supplierN_docs"
-                # }},
-                # {
-                #     "$unwind": "$supplierN_docs"
-                # }
-                # ,
-                # {"$lookup": {
-                #     "from": "supplier",
-                #     "localField": "lineitem_docs.l_suppkey",
-                #     "foreignField": "supplier_key",
-                #     "as": "supplierS_docs"
-                # }},
-                # {
-                #     "$unwind": "$supplierS_docs"
-                # },
 
             ]
 
@@ -94,28 +91,6 @@ class Query5:
 
 
 
-# {"$lookup": {
-#                     "from": "supplier",
-#                     "let": {"nationkey": "$nation_key", "supkey": "$supplier_key"},
-#                     "pipeline": [
-#                         {"$match":
-#                             {"$expr":
-#                                 {"$and":
-#                                     [
-#                                         {"$eq": ["$customer_docs.nation_key", "$$nationkey"]},
-#                                         {"$eq": ["$lineitem_docs.l_suppkey", "$$supkey"]}
-#                                     ]
-#                                 }
-#                             }
-#                         }
-#                     ],
-#                     "as": "supplier_docs"
-#                 }
-#                 }
 
 
 
-
-
-# ,
-#
