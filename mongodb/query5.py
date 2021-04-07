@@ -28,42 +28,94 @@ class Query5:
             years = [1993, 1994, 1995, 1996, 1997]
             random_date = datetime.datetime(years[random.randint(0, 4)], 1, random.randint(1, 31), 0, 0)
 
-            queriesPipe = [
+            pipeline = [
+                {"$match":
+                    {"$and":[{"order_date" : {"$gte": datetime.datetime(1994, 1, 1)}},
+                              {"order_date": {"$lt": datetime.datetime(1995, 1, 1)}}]
+                     }
+                },
                 {"$lookup": {
-                    "from": "orders",
-                    "let": {"custkey": "$cust_key", "orderdate": "$order_date"},
-                    "pipeline": [
-                        {"$match":
-                            {"$expr":
-                                {"$and":
-                                [
-                                    {"$eq": ["$cust_key", "$$custkey"]},
-                                    {"$gte": ["$$orderdate","datetime.datetime(1994,1,1)"]},
-                                    {"$lt": ["$$orderdate","datetime.datetime(1995,1,1)"]}
-                                ]
-                                 }
-                             }
-                         },
-                        { "$project": {"order_key": 1, "cust_key":1, "nation_key":1, "order_date":1, "_id": 0}}
-                    ],
-                    "as": "lj_customer_order"
-                }
+                    "from": "customer",
+                    "localField": "cust_key",
+                    "foreignField": "cust_key",
+                    "as": "customer_docs"
+                    }
                 },
                 {
-                    "$unwind": "$lj_customer_order"
+                    "$unwind": "$customer_docs"
                 },
+                {"$lookup": {
+                    "from": "lineitem",
+                    "localField": "order_key",
+                    "foreignField": "l_orderkey",
+                    "as": "lineitem_docs"
+                }},
+                {
+                    "$unwind": "$lineitem_docs"
+                },
+                {
 
+                }
+
+                # {"$lookup": {
+                #     "from": "supplier",
+                #     "localField": "customer_docs.nation_key",
+                #     "foreignField": "nation_key",
+                #     "as": "supplierN_docs"
+                # }},
+                # {
+                #     "$unwind": "$supplierN_docs"
+                # }
+                # ,
+                # {"$lookup": {
+                #     "from": "supplier",
+                #     "localField": "lineitem_docs.l_suppkey",
+                #     "foreignField": "supplier_key",
+                #     "as": "supplierS_docs"
+                # }},
+                # {
+                #     "$unwind": "$supplierS_docs"
+                # },
 
             ]
 
             start_time = time.time()
-            result = customer_table.aggregate(queriesPipe)
+            result = orders_table.aggregate(pipeline)
             print(list(result))
             end_time = time.time()
-            print("---------------Query 1-------------")
+            print("---------------Query 5-------------")
             print("Start time: " + str(start_time))
             print("End time: " + str(end_time))
             print("In seconds: " + str("{:.7f}".format(end_time - start_time)))
 
         except errors.ServerSelectionTimeoutError as err:
             print("pymongo ERROR:", err)
+
+
+
+
+# {"$lookup": {
+#                     "from": "supplier",
+#                     "let": {"nationkey": "$nation_key", "supkey": "$supplier_key"},
+#                     "pipeline": [
+#                         {"$match":
+#                             {"$expr":
+#                                 {"$and":
+#                                     [
+#                                         {"$eq": ["$customer_docs.nation_key", "$$nationkey"]},
+#                                         {"$eq": ["$lineitem_docs.l_suppkey", "$$supkey"]}
+#                                     ]
+#                                 }
+#                             }
+#                         }
+#                     ],
+#                     "as": "supplier_docs"
+#                 }
+#                 }
+
+
+
+
+
+# ,
+#
