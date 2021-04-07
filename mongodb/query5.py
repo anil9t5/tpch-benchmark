@@ -28,43 +28,36 @@ class Query5:
             years = [1993, 1994, 1995, 1996, 1997]
             random_date = datetime.datetime(years[random.randint(0, 4)], 1, random.randint(1, 31), 0, 0)
 
-            pipeline = [
-
-                {
-                    # where
-                    "$match": {
-                        "c_custkey": {
-                            "$eq": "o_custkey"
-                        }
-                    }
-                },
-                {
-                    #select
-                    "$project": {
-                        "c_custkey": 1,
-                        "o_custkey": 1,
-
-                    }
-                },
-                {
-                    #Aggregations
-                    '$lookup': {
-                        'from' : 'orders',
-                        'localField' : 'c_custkey',
-                        'foreignField' : 'o_custkey',
-                        'as' : 'co_customer_order'
-                    }
-                },
-                {
-                    #sort or order by
-                    "$sort": {
-                        "C_NAME": 1
-                    }
+            queriesPipe = [
+                {"$lookup": {
+                    "from": "orders",
+                    "let": {"custkey": "$cust_key", "orderdate": "$order_date"},
+                    "pipeline": [
+                        {"$match":
+                            {"$expr":
+                                {"$and":
+                                [
+                                    {"$eq": ["$cust_key", "$$custkey"]},
+                                    {"$gte": ["$$orderdate","datetime.datetime(1994,1,1)"]},
+                                    {"$lt": ["$$orderdate","datetime.datetime(1995,1,1)"]}
+                                ]
+                                 }
+                             }
+                         },
+                        { "$project": {"order_key": 1, "cust_key":1, "nation_key":1, "order_date":1, "_id": 0}}
+                    ],
+                    "as": "lj_customer_order"
                 }
+                },
+                {
+                    "$unwind": "$lj_customer_order"
+                },
+
+
             ]
 
             start_time = time.time()
-            result = customer_table.aggregate(pipeline)
+            result = customer_table.aggregate(queriesPipe)
             print(list(result))
             end_time = time.time()
             print("---------------Query 1-------------")
