@@ -41,3 +41,106 @@ class Query4:
 
         except errors.ServerSelectionTimeoutError as err:
             print("pymongo ERROR:", err)
+
+
+#---------------------Crashes
+# {"$lookup": {
+#                     "from": "supplier",
+#                     "let": {"nationkey": "$customer_docs.nation_key", "supkey": "$lineitem_docs.l_suppkey"},
+#                     "pipeline": [
+#                         {"$match":
+#                             {"$expr":
+#                                 {"$and":
+#                                     [
+#                                         {"$eq": ["$nation_key", "$$nationkey"]},
+#                                         {"$eq": ["$supplier_key", "$$supkey"]}
+#                                     ]
+#                                 }
+#                             }
+#                         }
+#                     ],
+#                     "as": "supplier_docs"
+#                     }
+#                 },
+#                 {
+#                     "$unwind": "$supplier_docs"
+#                 }
+
+#---------Separate fields
+# {"$lookup": {
+#     "from": "supplier",
+#     "localField": "customer_docs.nation_key",
+#     "foreignField": "nation_key",
+#     "as": "supplierN_docs"
+# }},
+# {
+#     "$unwind": "$supplierN_docs"
+# }
+# ,
+# {"$lookup": {
+#     "from": "supplier",
+#     "localField": "lineitem_docs.l_suppkey",
+#     "foreignField": "supplier_key",
+#     "as": "supplierS_docs"
+# }},
+# {
+#     "$unwind": "$supplierS_docs"
+# },
+
+
+#--------------------Unwined and match
+# ,
+#                 {"$lookup": {
+#                     "from": "supplier",
+#                     "localField": "customer_docs.nation_key",
+#                     "foreignField": "nation_key",
+#                     "as": "supplierN_docs"
+#                 }},
+#                 {
+#                     "$unwind": "$supplier_docs"
+#                 },
+#                 {"$match":
+#                      {"lineitem_docs.l_suppkey":"supplier_docs.supplier_key"}
+#                 }
+
+
+
+
+
+# {
+#                     {"$lookup": {
+#                         "from": "supplier",
+#                         "let": {"sNationKey": "$nation_key", "sSupKey":"$supplier_key"},
+#                         "pipeline": [
+#                             {"$match":
+#                                  {"$and": [{"customer_docs.nation_key": {"$eq": "sNationKey"}},
+#                                            {"order_date": {"$lt": datetime.datetime(1995, 1, 1)}}]
+#                                   }
+#                             },
+#                             {"$lookup": {
+#
+#                                 }
+#
+#                             }
+#
+#                         ]
+#
+#                         }
+#                     }
+#                 }
+
+
+
+
+# {"$lookup": {
+#                     "from": "supplier",
+#                     "localField": "lineitem_docs.l_suppkey",
+#                     "foreignField": "supplier_key",
+#                     "as": "supplier_docs"
+#                 }},
+#                 {
+#                     "$unwind": "$supplier_docs"
+#                 },
+#                 {"$match":
+#                      {"customer_docs.nation_key":"supplier_docs.nation_key"}
+#                 }
