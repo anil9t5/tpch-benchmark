@@ -61,8 +61,47 @@ class Query5:
                 {
                     "$unwind": "$supplier_docs"
                 },
-                {"$match":
-                     {"customer_docs.nation_key":"supplier_docs.nation_key"}
+                {"$lookup": {
+                    "from": "nation",
+                    "localField": "supplier_docs.nation_key",
+                    "foreignField": "nation_key",
+                    "as": "nation_docs"
+                }},
+                {
+                    "$unwind": "$nation_docs"
+                },
+                {"$lookup": {
+                    "from": "region",
+                    "localField": "nation_docs.region_key",
+                    "foreignField": "region_key",
+                    "as": "region_docs"
+                }},
+                {
+                    "$unwind": "$region_docs"
+                },
+                {
+                    "$project":{
+                        "nation_docs.name":1,
+                        "region_docs.name":1,
+                        "lineitem_docs.l_extendedprice":1,
+                        "lineitem_docs.l_discount":1,
+                        "order_date":1,
+                        "customer_docs.nation_key":1,
+                        "supplier_docs.nation_key":1,
+                        "ldist_minus1":{
+                            "$subtract":[ 1, "$lineitem_docs.l_discount" ]
+                        },
+                        "compare_nationkey":{
+                            "$cmp":["$customer_docs.nation_key","$supplier_docs.nation_key"]
+                            #$cmp is a compare operator that stores zero,1,-1 in c_nkTOs_nk field. The numbers mean equal/greater/less than respectively
+                        }
+                    }
+                },
+                {
+                    "$match":{
+                        "region_docs.name": "AFRICA",
+                        "compare_nationkey":{"$eq":0}
+                    }
                 }
             ]
 
