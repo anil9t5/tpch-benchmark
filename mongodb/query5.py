@@ -102,6 +102,26 @@ class Query5:
                         "region_docs.name": "AFRICA",
                         "compare_nationkey":{"$eq":0}
                     }
+                },
+                {
+                    "$group":{
+                        "_id":{
+                            "n_name":"$nation_docs.name"
+                        },
+                        "revenue":{
+                            "$sum":{
+                                "$multiply":[
+                                    "$lineitem_docs.l_extendedprice",
+                                    "$ldist_minus1"
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "$sort":{
+                        "revenue":-1
+                    }
                 }
             ]
 
