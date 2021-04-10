@@ -39,17 +39,32 @@ class InsertData:
 
     @staticmethod
     def insert_nation(self):
-        nations = {"ALGERIA,0", "ARGENTINA,1", "BRAZIL,1", "CANADA,1", "EGYPT,4", "ETHIOPIA,0",
-                                "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
-                                "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
-                                "RUSSIA,3", "UNITED KINGDOM,3", "UNITED STATES,1"}
-        nations_collection_values = []
+        # nations = {"ALGERIA,0", "ARGENTINA,1", "BRAZIL,1", "CANADA,1", "EGYPT,4", "ETHIOPIA,0",
+        #                         "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
+        #                         "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
+        #                         "RUSSIA,3", "UNITED KINGDOM,3", "UNITED STATES,1"}
+        nations = {0: "ALGERIA", 1: "ARGENTINA", 2: "BRAZIL", 3: "CANADA",
+                   4: "EGYPT", 5: "ETHIOPIA", 6: "FRANCE", 7: "GERMANY",
+                   8: "INDIA", 9: "INDONESIA", 10: "IRAN", 11: "IRAQ",
+                   12: "JAPAN", 13: "JORDAN", 14: "KENYA", 15: "MOROCCO",
+                   16: "MOZAMBIQUE", 17: "PERU", 18: "CHINA", 19: "ROMANIA",
+                   20: "SAUDI ARABIA", 21: "VIETNAM", 22: "RUSSIA", 23: "UNITED KINGDOM",
+                   24: "UNITED STATES"}
 
-        for i, val in enumerate(nations):
+        region_key = {"ALGERIA": 0, "ARGENTINA": 1, "BRAZIL": 1, "CANADA": 1, "EGYPT": 4, "ETHIOPIA": 0,
+                      "FRANCE": 3, "GERMANY": 3, "INDIA": 2, "INDONESIA": 2, "IRAN": 4, "IRAQ": 4,
+                      "JAPAN": 2, "JORDAN": 4, "KENYA": 0, "MOROCCO": 0, "MOZAMBIQUE": 0, "PERU": 1,
+                      "CHINA": 2, "ROMANIA": 3, "SAUDI ARABIA": 4, "VIETNAM": 2,
+                      "RUSSIA": 3, "UNITED KINGDOM": 3, "UNITED STATES": 1}
+        nations_collection_values = []
+        data_size = 25
+        for nation_key in range(data_size):
+            n_name = nations[nation_key]
+            n_regionkey = region_key[n_name]
             value = {
-                "nation_key": i,
-                "name": val,
-                "region_key": random.randint(0, 25),
+                "nation_key": nation_key,
+                "name": n_name,
+                "region_key": n_regionkey,
                 "comment": InsertData.generate_random_data(random.randint(31, 114))
             }
             nations_collection_values.append(value)
