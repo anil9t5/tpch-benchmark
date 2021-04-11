@@ -1,7 +1,7 @@
 import random
 from random import choice
 from string import ascii_lowercase
-import psycopg2
+import py2neo
 from postgresql.config import config
 from datetime import datetime, timedelta
 
