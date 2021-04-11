@@ -12,14 +12,8 @@ class Query5:
     def execute(self):
         try:
             collection = InitilizeDB.init()
-            region_table = collection['region']
             orders_table = collection['orders']
-            part_table = collection['part']
-            nation_table = collection['nation']
-            customer_table = collection['customer']
-            lineitem_table = collection['lineitem']
-            partsupp_table = collection['partsupp']
-            supplier_table = collection['supplier']
+
 
             regions = ["AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"]
             random_region = regions[random.randint(0, 4)]
@@ -78,7 +72,8 @@ class Query5:
                 }},
                 {
                     "$unwind": "$region_docs"
-                },
+                }
+                ,
                 {
                     "$project":{
                         "nation_docs.name":1,
@@ -96,13 +91,15 @@ class Query5:
                             #$cmp is a compare operator that stores zero,1,-1 in c_nkTOs_nk field. The numbers mean equal/greater/less than respectively
                         }
                     }
-                },
-                {
-                    "$match":{
-                        "region_docs.name": "AFRICA",
-                        "compare_nationkey":{"$eq":0}
-                    }
-                },
+                }
+                # ,
+                # {
+                #     "$match":{
+                #         #"region_docs.name": "AFRICA",
+                #         #"compare_nationkey":{"$eq":0}
+                #     }
+                # }
+                ,
                 {
                     "$group":{
                         "_id":{
@@ -117,7 +114,8 @@ class Query5:
                             }
                         }
                     }
-                },
+                }
+                ,
                 {
                     "$sort":{
                         "revenue":-1
