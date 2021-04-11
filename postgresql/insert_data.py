@@ -361,6 +361,7 @@ class InsertData:
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
 
+            #Dict of nation_name["N_NATIONKEY"] = "N_NAME"
             nation_name={0:"ALGERIA", 1:"ARGENTINA", 2:"BRAZIL", 3:"CANADA",
                          4:"EGYPT", 5:"ETHIOPIA", 6:"FRANCE", 7:"GERMANY",
                          8:"INDIA", 9:"INDONESIA", 10:"IRAN", 11:"IRAQ",
@@ -369,6 +370,7 @@ class InsertData:
                          20:"SAUDI ARABIA", 21:"VIETNAM", 22:"RUSSIA", 23:"UNITED KINGDOM",
                          24:"UNITED STATES"}
 
+            # Dict of region_key["R_REGIONKEY"] = "R_NAME"
             region_key = {"ALGERIA":0, "ARGENTINA":1, "BRAZIL":1, "CANADA":1, "EGYPT":4, "ETHIOPIA":0,
                            "FRANCE":3, "GERMANY":3, "INDIA":2, "INDONESIA":2, "IRAN":4, "IRAQ":4,
                           "JAPAN":2, "JORDAN":4, "KENYA":0, "MOROCCO":0, "MOZAMBIQUE":0, "PERU":1,

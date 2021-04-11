@@ -26,4 +26,5 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 database.ini
+mongodb/notes.txt
 venv/
