@@ -18,35 +18,22 @@ class RunQueries:
             params = config()
             conn = psycopg2.connect(**params)
 
-            # q1= Query1(conn)
-            # q1.execute()
-            #
-            # q2=Query2(conn)
-            # q2.execute()
+            q1= Query1(conn)
+            q1.execute()
 
-            # q3 = Query3(conn)
-            # q3.execute()
+            q2=Query2(conn)
+            q2.execute()
 
-            # q4 = Query4(conn)
-            # q4.execute()
+            q3 = Query3(conn)
+            q3.exescute()
+
+            q4 = Query4(conn)
+            q4.execute()
 
             q5 = Query5(conn)
             q5.execute()
 
-            # q6 = Query6(conn)
-            # q6.execute()
-            #
-            # q7 = Query7(conn)
-            # q7.execute()
-            #
-            # q8 = Query8(conn)
-            # q8.execute()
-            #
-            # q9 = Query9(conn)
-            # q9.execute()
-            #
-            # q10 = Query10(conn)
-            # q10.execute()
+
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
