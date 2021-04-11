@@ -15,6 +15,7 @@ class Query4:
         try:
             collection = InitilizeDB.init()
             lineitem_table=collection["lineitem"]
+            orders_table = collection['orders']
 
             all_years = [1993, 1994, 1995, 1996, 1997]
             full_years = [1993, 1994, 1995, 1996]
@@ -26,29 +27,53 @@ class Query4:
             else:
                 random_date = datetime.datetime(all_years[random.randint(0, 4)], random_month, 1, 0, 0)
 
-            pipeline = [
+            temp_pipeline=[
                 {
-                    "$project": {
-                        "order_date": 1,
-                        "order_priority": 1,
-                        "eq": {
-                            "$cond": [
-                                {
-                                    "$lt": [
-                                        "$lineitems.l_commitdate",
-                                        "$lineitems.l_receiptdate"
-                                    ]
-                                },
-                                0,
-                                1
+                    "$project":{
+                        "_id":0,
+                        "l_orderkey":1,
+                        "eq":{
+                            "$cond":[{
+                                "$lt":["$l_commitdate","$l_receiptdate"]
+                            },
+                            1,
+                            0
                             ]
                         }
                     }
                 },
                 {
+                    "$match":{
+                        "eq":{
+                            "$eq":1
+                        }
+                    }
+                }
+            ]
+
+            temp_dict = list(lineitem_table.aggregate(temp_pipeline))
+
+            orderkeys_list = []
+            for item in temp_dict:
+                orderkeys_list.append(item['l_orderkey'])
+
+
+            pipeline = [
+                {
+                    "$project": {
+                        "order_date": 1,
+                        "order_priority": 1,
+                        "order_key":1
+                    }
+                },
+                {
                     "$match": {
-                        "eq": {
-                            "$eq": 1
+                        "order_date": {
+                            "$gte": datetime.datetime(1993, 1, 1),
+                            "$lt": datetime.datetime(1994, 1, 1)
+                        },
+                        "order_key":{
+                            "$in":orderkeys_list
                         }
                     }
                 },
