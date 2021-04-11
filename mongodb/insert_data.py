@@ -2,7 +2,6 @@ from mongodb.initialize_db import InitilizeDB
 import string
 import random
 from datetime import datetime, timedelta
-import numpy as np
 
 
 class InsertData:
@@ -11,8 +10,7 @@ class InsertData:
         super().__init__()
         self.db = db
         self.scale_factor = scale_factor
-        self.retail_prices = np.array(
-            [self.scale_factor * 200000], dtype='float')
+        self.retail_prices = {}
 
     @staticmethod
     def generate_random_data(max_length):
@@ -39,17 +37,32 @@ class InsertData:
 
     @staticmethod
     def insert_nation(self):
-        nations = {"ALGERIA,0", "ARGENTINA,1", "BRAZIL,1", "CANADA,1", "EGYPT,4", "ETHIOPIA,0",
-                                "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
-                                "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
-                                "RUSSIA,3", "UNITED KINGDOM,3", "UNITED STATES,1"}
-        nations_collection_values = []
+        # nations = {"ALGERIA,0", "ARGENTINA,1", "BRAZIL,1", "CANADA,1", "EGYPT,4", "ETHIOPIA,0",
+        #                         "FRANCE,3", "GERMANY,3", "INDIA,2", "INDONESIA,2", "IRAN,4", "IRAQ,4", "JAPAN,2", "JORDAN,4", "KENYA,0",
+        #                         "MOROCCO,0", "MOZAMBIQUE,0", "PERU,1", "CHINA,2", "ROMANIA,3", "SAUDI ARABIA,4", "VIETNAM,2",
+        #                         "RUSSIA,3", "UNITED KINGDOM,3", "UNITED STATES,1"}
+        nations = {0: "ALGERIA", 1: "ARGENTINA", 2: "BRAZIL", 3: "CANADA",
+                   4: "EGYPT", 5: "ETHIOPIA", 6: "FRANCE", 7: "GERMANY",
+                   8: "INDIA", 9: "INDONESIA", 10: "IRAN", 11: "IRAQ",
+                   12: "JAPAN", 13: "JORDAN", 14: "KENYA", 15: "MOROCCO",
+                   16: "MOZAMBIQUE", 17: "PERU", 18: "CHINA", 19: "ROMANIA",
+                   20: "SAUDI ARABIA", 21: "VIETNAM", 22: "RUSSIA", 23: "UNITED KINGDOM",
+                   24: "UNITED STATES"}
 
-        for i, val in enumerate(nations):
+        region_key = {"ALGERIA": 0, "ARGENTINA": 1, "BRAZIL": 1, "CANADA": 1, "EGYPT": 4, "ETHIOPIA": 0,
+                      "FRANCE": 3, "GERMANY": 3, "INDIA": 2, "INDONESIA": 2, "IRAN": 4, "IRAQ": 4,
+                      "JAPAN": 2, "JORDAN": 4, "KENYA": 0, "MOROCCO": 0, "MOZAMBIQUE": 0, "PERU": 1,
+                      "CHINA": 2, "ROMANIA": 3, "SAUDI ARABIA": 4, "VIETNAM": 2,
+                      "RUSSIA": 3, "UNITED KINGDOM": 3, "UNITED STATES": 1}
+        nations_collection_values = []
+        data_size = 25
+        for nation_key in range(data_size):
+            n_name = nations[nation_key]
+            n_regionkey = region_key[n_name]
             value = {
-                "nation_key": i,
-                "name": val,
-                "region_key": random.randint(0, 25),
+                "nation_key": nation_key,
+                "name": n_name,
+                "region_key": n_regionkey,
                 "comment": InsertData.generate_random_data(random.randint(31, 114))
             }
             nations_collection_values.append(value)
@@ -166,7 +179,7 @@ class InsertData:
 
             price = (90000 + (key/10) % 20001 + 100 * key % 1000) / 100.0
 
-            # self.retail_prices[key] = price
+            self.retail_prices[key] = price
             retail_price_string = '{:.2f}'.format(price)
             p_comments = InsertData.generate_random_data(
                 random.randint(5, 22))
@@ -257,138 +270,303 @@ class InsertData:
             self.db["customer"].insert(
                 customer_collection_values)
 
+    # @staticmethod
+    # def insert_order_line_item(self):
+    #     priorities = ["1-URGENT", "2-HIGH",
+    #                   "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"]
+    #     instructs = ["DELIVER IN PERSON",
+    #                  "COLLECT COD", "NONE", "TAKE BACK RETURN"]
+    #     modes = ["REG AIR", "AIR", "RAIL", "SHIP", "TRUCK", "MAIL", "FOB"]
+    #     start_date = datetime.strptime("1992-1-1", "%Y-%m-%d")
+    #     current_date = datetime.strptime("1995-6-17", "%Y-%m-%d")
+    #     end_date = datetime.strptime("1998-12-31", "%Y-%m-%d")
+    #     # order_size = int(self.scale_factor * 150000 * 4)
+    #     # keys = list(range(order_size))
+    #     # random.shuffle(keys)
+
+    #     customer_data_size = int(self.scale_factor * 150000)
+    #     order_data_size = int(customer_data_size * 10)  # 1500000
+    #     order_key_size = int(order_data_size * 4)  # 1500000 * 4
+    #     part_data_size = int(self.scale_factor * 200000)
+
+    #     subtracted_date = ENDDATE - timedelta(151)
+    #     time_between_dates = subtracted_date - STARTDATE
+    #     days_between_dates = time_between_dates.days
+
+    #     keys = list(range(order_key_size))
+    #     random.shuffle(keys)
+    #     days_range = 2405
+    #     for i in range(order_data_size):
+    #         key = keys[i]
+    #         if (key % 4) != 0:
+    #             continue
+    #         customer_key = 0
+    #         while (customer_key % 3) == 0:
+    #             customer_key = random.randint(
+    #                 0, int(self.scale_factor * 150000))
+    #         order_status = "P"
+    #         total_price = 0.0
+    #         random_number_of_days = random.randrange(
+    #             days_between_dates)
+    #         order_date = start_date + timedelta(random_number_of_days)
+    #         priority_string = priorities[random.randint(0, 4)]
+    #         clerk_string = "Clerk#" + \
+    #             '{:09d}'.format(random.randint(
+    #                 1, int(self.scale_factor * 1000)))
+    #         ship_priority = "0"
+    #         order_comment = InsertData.generate_random_data(
+    #             random.randint(19, 78))
+
+    #         line_item_rows = random.randint(1, 7)
+    #         F_number = 0
+    #         O_number = 0
+
+    #         for j in range(line_item_rows):
+    #             L_order_key = key
+    #             part_key = random.randint(
+    #                 0, int(self.scale_factor * 200000))
+    #             S = int(self.scale_factor * 10000)
+    #             i = random.randint(0, 4)
+    #             supplier_key = (part_key+(i*((S/4)+(part_key-1)/S)))
+    #             line_number = j
+    #             quantity = random.randint(0, 50)
+
+    #             extended_price = 0.0
+
+    #             if (part_key < self.retail_prices.size):
+    #                 extended_price = quantity * self.retail_prices[part_key]
+    #             else:
+    #                 extended_price = quantity * self.retail_prices[0]
+
+    #             extended_price_str = '{:.2f}'.format(extended_price)
+    #             l_discount = random.uniform(0.0, 0.10)
+    #             discount_str = str(l_discount)
+    #             tax = random.uniform(0.0, 0.08)
+    #             tax_str = '{:.2f}'.format(tax)
+    #             return_flag_str = "N"
+    #             line_status_str = "F"
+    #             ship_date = order_date + timedelta(random.randint(1, 121))
+    #             commit_date = order_date + timedelta(random.randint(30, 90))
+    #             receipt_date = ship_date + timedelta(random.randint(1, 30))
+    #             ship_instruct_str = instructs[random.randint(0, 3)]
+    #             ship_mode_str = modes[random.randint(0, 6)]
+    #             line_comment_str = InsertData.generate_random_data(
+    #                 random.randint(10, 43))
+
+    #             if(receipt_date > current_date):
+    #                 return_flag_str = "R" if (
+    #                     random.randint(0, 1) == 0) else "A"
+    #             if(ship_date < current_date):
+    #                 line_status_str = "O"
+
+    #             if(line_status_str == "O"):
+    #                 O_number = O_number + 1
+    #             else:
+    #                 F_number = F_number + 1
+
+    #             total_price += extended_price * (1+tax)*(1-l_discount)
+
+    #             line_items_collection_values = []
+
+    #             values = {
+    #                 "l_orderkey": L_order_key,
+    #                 "l_partkey": part_key,
+    #                 "l_suppkey": supplier_key,
+    #                 "l_linenumber": line_number,
+    #                 "l_quantity": quantity,
+    #                 "l_extendedprice": extended_price,
+    #                 "l_discount": l_discount,
+    #                 "l_tax": tax,
+    #                 "l_returnflag": return_flag_str,
+    #                 "l_linestatus": line_status_str,
+    #                 "l_shipdate": ship_date,
+    #                 "l_commitdate": commit_date,
+    #                 "l_receiptdate": receipt_date,
+    #                 "l_shipinstruct": ship_instruct_str,
+    #                 "l_shipmode": ship_mode_str,
+    #                 "l_comment": line_comment_str
+    #             }
+    #             line_items_collection_values.append(values)
+
+    #             self.db["lineitem"].insert(
+    #                 line_items_collection_values)
+
+    #         if(F_number == line_item_rows):
+    #             order_status_str = "F"
+    #         if(O_number == line_item_rows):
+    #             order_status_str = "O"
+
+    #         total_price_str = '{:.2f}'.format(total_price)
+
+    #         line_items_collection_additional_values = []
+
+    #         additional_values = {
+    #             "order_key": key,
+    #             "cust_key": customer_key,
+    #             "order_status": order_status_str,
+    #             "total_price": total_price_str,
+    #             "order_date": order_date,
+    #             "order_priority": priority_string,
+    #             "clerk": clerk_string,
+    #             "ship_priority": ship_priority,
+    #             "comment": order_comment
+    #         }
+
+    #         line_items_collection_additional_values.append(additional_values)
+    #         self.db["orders"].insert(
+    #             line_items_collection_additional_values)
+
+    # ---------------------------------
     @staticmethod
     def insert_order_line_item(self):
-        priorities = ["1-URGENT", "2-HIGH",
+
+        Priorities = ["1-URGENT", "2-HIGH",
                       "3-MEDIUM", "4-NOT SPECIFIED", "5-LOW"]
-        instructs = ["DELIVER IN PERSON",
-                     "COLLECT COD", "NONE", "TAKE BACK RETURN"]
-        modes = ["REG AIR", "AIR", "RAIL", "SHIP", "TRUCK", "MAIL", "FOB"]
-        start_date = datetime.strptime("1992-1-1", "%Y-%m-%d")
-        current_date = datetime.strptime("1995-6-17", "%Y-%m-%d")
-        end_date = datetime.strptime("1998-12-31", "%Y-%m-%d")
-        order_size = int(self.scale_factor * 150000 * 4)
-        keys = list(range(order_size))
+        STARTDATE = datetime.strptime("1992-1-1", "%Y-%m-%d")
+        ENDDATE = datetime.strptime("1998-12-31", "%Y-%m-%d")
+        CURRENTDATE = datetime.strptime("1995-6-17", "%Y-%m-%d")
+        Instructions = ["DELIVER IN PERSON",
+                        "COLLECT COD", "NONE", "TAKE BACK RETURN"]
+        Modes = ["REG AIR", "AIR", "RAIL", "SHIP", "TRUCK", "MAIL", "FOB"]
+
+        customer_data_size = int(self.scale_factor * 150000)
+        order_data_size = int(customer_data_size * 10)  # 1500000
+        order_key_size = int(order_data_size * 4)  # 1500000 * 4
+        part_data_size = int(self.scale_factor * 200000)
+
+        subtracted_date = ENDDATE - timedelta(151)
+        time_between_dates = subtracted_date - STARTDATE
+        days_between_dates = time_between_dates.days
+
+        keys = list(range(order_key_size))
         random.shuffle(keys)
 
-        days_range = 2405
-        for i in range(order_size):
-            key = keys.index(i)
-            if (key % 4) != 0:
-                continue
-            customer_key = 0
-            while (customer_key % 3) == 0:
-                customer_key = random.randint(
-                    0, int(self.scale_factor * 150000))
-            order_status = "P"
-            total_price = 0.0
-            order_date = start_date + timedelta(random.randint(1, days_range))
-            priority_string = priorities[random.randint(0, 4)]
-            clerk_string = "Clerk#" + \
-                '{:09d}'.format(random.randint(
-                    1, int(self.scale_factor * 1000)))
-            ship_priority = "0"
-            order_comment = InsertData.generate_random_data(
-                random.randint(19, 78))
+        for id_order in range(order_data_size):
 
-            line_item_rows = random.randint(1, 7)
-            F_number = 0
-            O_number = 0
+            O_ORDERKEY = keys[id_order]
 
-            for j in range(line_item_rows):
-                L_order_key = key
-                part_key = random.randint(
-                    0, int(self.scale_factor * 200000))
-                S = int(self.scale_factor * 10000)
-                i = random.randint(0, 4)
-                supplier_key = (part_key+(i*((S/4)+(part_key-1)/S)))
-                line_number = j
-                quantity = random.randint(0, 50)
+            if O_ORDERKEY % 4 == 0:  # Only 25% of range key is populated
 
-                extended_price = 0.0
+                customer_key = random.randint(1, customer_data_size)
+                # not all customers have order. Every third customer is not assigned any order
+                while (customer_key % 3 == 0):
+                    customer_key = random.randint(
+                        1, customer_data_size)
+                O_CUSTKEY = customer_key
+                random_number_of_days = random.randrange(
+                    days_between_dates)
+                O_ORDERDATE = STARTDATE + \
+                    timedelta(random_number_of_days)
 
-                if (part_key < self.retail_prices.size):
-                    extended_price = quantity * self.retail_prices[part_key]
-                else:
-                    extended_price = quantity * self.retail_prices[0]
+                O_ORDERPRIORITY = Priorities[random.randint(0, 4)]
+                O_CLERK = "Clerk#" + \
+                    '{:09d}'.format(random.randint(
+                        1, int(self.scale_factor * 1000)))
+                O_SHIPPRIORITY = 0
+                O_COMMENT = InsertData.generate_random_data(
+                    random.randint(19, 78))
 
-                extended_price_str = '{:.2f}'.format(extended_price)
-                l_discount = random.uniform(0.0, 0.10)
-                discount_str = str(l_discount)
-                tax = random.uniform(0.0, 0.08)
-                tax_str = '{:.2f}'.format(tax)
-                return_flag_str = "N"
-                line_status_str = "F"
-                ship_date = order_date + timedelta(random.randint(1, 121))
-                commit_date = order_date + timedelta(random.randint(30, 90))
-                receipt_date = ship_date + timedelta(random.randint(1, 30))
-                ship_instruct_str = instructs[random.randint(0, 3)]
-                ship_mode_str = modes[random.randint(0, 6)]
-                line_comment_str = InsertData.generate_random_data(
-                    random.randint(10, 43))
+                # -----------LINEITEM table
+                data_size_lineitem = random.randint(1, 7)
+                O_TOTALPRICE = 0
+                O_ORDERSTATUS = "P"
 
-                if(receipt_date > current_date):
-                    return_flag_str = "R" if (
-                        random.randint(0, 1) == 0) else "A"
-                if(ship_date < current_date):
-                    line_status_str = "O"
+                part_key_temp = []
+                temp_key = random.randint(0, (part_data_size-1))
+                part_key_temp.append(temp_key)
+                for id_lineitem in range(data_size_lineitem):
+                    L_ORDERKEY = O_ORDERKEY
+                    L_PARTKEY = temp_key
+                    while (temp_key in part_key_temp):
+                        temp_key = random.randint(
+                            0, (part_data_size-1))
+                    part_key_temp.append(temp_key)
 
-                if(line_status_str == "O"):
-                    O_number = O_number + 1
-                else:
-                    F_number = F_number + 1
+                    i_sup = random.randint(0, 3)
+                    S = int(self.scale_factor * 10000)
+                    L_SUPPKEY = (
+                        L_PARTKEY + int((i_sup * ((S / 4) + int((L_PARTKEY - 1) / S))) % S) + 1)
 
-                total_price += extended_price * (1+tax)*(1-l_discount)
+                    L_LINENUMBER = id_lineitem
 
-                line_items_collection_values = []
+                    L_QUANTITY = random.randint(1, 50)
 
-                values = {
-                    "l_orderkey": L_order_key,
-                    "l_partkey": part_key,
-                    "l_suppkey": supplier_key,
-                    "l_linenumber": line_number,
-                    "l_quantity": quantity,
-                    "l_extendedprice": extended_price,
-                    "l_discount": l_discount,
-                    "l_tax": tax,
-                    "l_returnflag": return_flag_str,
-                    "l_linestatus": line_status_str,
-                    "l_shipdate": ship_date,
-                    "l_commitdate": commit_date,
-                    "l_receiptdate": receipt_date,
-                    "l_shipinstruct": ship_instruct_str,
-                    "l_shipmode": ship_mode_str,
-                    "l_comment": line_comment_str
+                    L_EXTENDEDPRICE = L_QUANTITY * \
+                        self.retail_prices[L_PARTKEY]
+                    L_DISCOUNT = random.uniform(0.0, 0.10)
+                    L_TAX = random.uniform(0.0, 0.08)
+
+                    L_SHIPDATE = O_ORDERDATE + \
+                        timedelta(random.randint(1, 121))
+                    if L_SHIPDATE > CURRENTDATE:
+                        L_LINESTATUS = "O"
+                    else:
+                        L_LINESTATUS = "F"
+
+                    if (L_LINESTATUS == "F"):
+                        O_ORDERSTATUS = "F"
+                    elif (L_LINESTATUS == "O"):
+                        O_ORDERSTATUS = "O"
+
+                    L_COMMITDATE = O_ORDERDATE + \
+                        timedelta(random.randint(30, 90))
+                    L_RECEIPTDATE = L_SHIPDATE + \
+                        timedelta(random.randint(1, 30))
+                    if L_RECEIPTDATE <= CURRENTDATE:
+                        if random.random() < 0.5:
+                            L_RETURNFLAG = "R"
+                        else:
+                            L_RETURNFLAG = "A"
+                    else:
+                        L_RETURNFLAG = "N"
+                    L_SHIPINSTRUCT = Instructions[random.randint(0, 3)]
+                    L_SHIPMODE = Modes[random.randint(0, 6)]
+                    L_COMMENT = InsertData.generate_random_data(
+                        random.randint(10, 43))
+
+                    O_TOTALPRICE += L_EXTENDEDPRICE * \
+                        (1 + L_TAX) * (1 - L_DISCOUNT)
+                    line_items_collection_values = []
+
+                    values = {
+                        "l_orderkey": L_ORDERKEY,
+                        "l_partkey": L_PARTKEY,
+                        "l_suppkey": L_SUPPKEY,
+                        "l_linenumber": L_LINENUMBER,
+                        "l_quantity": L_QUANTITY,
+                        "l_extendedprice": L_EXTENDEDPRICE,
+                        "l_discount": L_DISCOUNT,
+                        "l_tax": L_TAX,
+                        "l_returnflag": L_RETURNFLAG,
+                        "l_linestatus": L_LINESTATUS,
+                        "l_shipdate": L_SHIPDATE,
+                        "l_commitdate": L_COMMITDATE,
+                        "l_receiptdate": L_RECEIPTDATE,
+                        "l_shipinstruct": L_SHIPINSTRUCT,
+                        "l_shipmode": L_SHIPMODE,
+                        "l_comment": L_COMMENT
+                    }
+                    line_items_collection_values.append(values)
+
+                    self.db["lineitem"].insert(
+                        line_items_collection_values)
+                line_items_collection_additional_values = []
+                additional_values = {
+                    "order_key": O_ORDERKEY,
+                    "cust_key": O_CUSTKEY,
+                    "order_status": O_ORDERSTATUS,
+                    "total_price": O_TOTALPRICE,
+                    "order_date": O_ORDERDATE,
+                    "order_priority": O_ORDERPRIORITY,
+                    "clerk": O_CLERK,
+                    "ship_priority": O_SHIPPRIORITY,
+                    "comment": O_COMMENT
                 }
-                line_items_collection_values.append(values)
 
-                self.db["lineitem"].insert(
-                    line_items_collection_values)
-
-            if(F_number == line_item_rows):
-                order_status_str = "F"
-            if(O_number == line_item_rows):
-                order_status_str = "O"
-
-            total_price_str = '{:.2f}'.format(total_price)
-
-            line_items_collection_additional_values = []
-
-            additional_values = {
-                "order_key": key,
-                "cust_key": customer_key,
-                "order_status": order_status_str,
-                "total_price": total_price_str,
-                "order_date": order_date,
-                "order_priority": priority_string,
-                "clerk": clerk_string,
-                "ship_priority": ship_priority,
-                "comment": order_comment
-            }
-
-            line_items_collection_additional_values.append(additional_values)
-            self.db["orders"].insert(
-                line_items_collection_additional_values)
+                line_items_collection_additional_values.append(
+                    additional_values)
+                self.db["orders"].insert(
+                    line_items_collection_additional_values)
 
     def insert_to_collections(self):
         InsertData.region(self)
