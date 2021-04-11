@@ -1,3 +1,5 @@
+import py2neo
+
 WITH date('1998-12-01') - duration('P90D') AS my_date
 MATCH (item:LINEITEM)
 WHERE date(item.L_SHIPDATE) <= date(my_date)
