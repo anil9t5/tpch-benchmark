@@ -34,7 +34,7 @@ class ExportDataCsv:
                 conn.close()
 
     @staticmethod
-    def export_CUSTOMER_Nation_NATIONKEY(self):
+    def export_CUSTOMER_NATION_NATIONKEY(self):
         conn = None
         try:
             params = config()
@@ -62,7 +62,7 @@ class ExportDataCsv:
 
     def export_to_csv(self):
         # ExportDataCsv.export_CUSTOMER(self)
-        ExportDataCsv.export_CUSTOMER_Nation_NATIONKEY(self)
+        ExportDataCsv.export_CUSTOMER_NATION_NATIONKEY(self)
         # ExportDataCsv.export_PART(self)
         # ExportDataCsv.export_SUPPLIER(self)
         # ExportDataCsv.export_PARTSUPP(self)
