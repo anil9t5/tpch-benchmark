@@ -40,13 +40,14 @@ class ExportDataCsv:
             params = config()
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
-
+            file_name="customer_nation_nationkey_relation"
+            path="/home/shermin/Desktop/Projs/BigData/Data/exports/"
             command = '''COPY 
             (SELECT C_CUSTKEY, C_NATIONKEY  
             FROM customer AS c INNER JOIN nation AS n 
             ON c.C_NATIONKEY = n.N_NATIONKEY) 
-            TO '/home/shermin/Desktop/Projs/BigData/Data/exports/{0}.csv' 
-            DELIMITER '|' CSV HEADER;'''.format("customer_nation_nationkey_relation")
+            TO '{0}{1}.csv' 
+            DELIMITER '|' CSV HEADER;'''.format(path,file_name)
             print(command)
             cur.execute(command)
             cur.close()
