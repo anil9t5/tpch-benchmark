@@ -151,6 +151,22 @@ class InsertData:
                 '    order.O_DAY = TOINTEGER(date[0]) '
             )
 
+    @staticmethod
+    def insert_nodes_partsupp(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS '
+            'FROM "file:///partsupp.csv" AS line FIELDTERMINATOR "|" '
+            'CREATE (partsupp:PARTSUPP { PS_PARTKEY: TOINTEGER(line.PS_PARTKEY) }) '
+            'SET partsupp.PS_SUPPKEY = TOINTEGER(line.PS_SUPPKEY), '
+            '    partsupp.PS_AVAILQTY = TOINTEGER(line.PS_AVAILQTY), '
+            '    partsupp.PS_SUPPLYCOST = TOFLOAT(line.PS_SUPPLYCOST), '
+            '    partsupp.PS_COMMENT = line.PS_COMMENT; '
+        )
+
+
 #=======================================================
     @staticmethod
     def insert_relation_customer_nation(self):
