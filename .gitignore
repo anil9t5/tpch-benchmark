@@ -28,9 +28,7 @@ var/
 .idea/vcs.xml
 requirement.txt
 
-postgresql/__pycache__/__init__.cpython-39.pyc
-postgresql/__pycache__/__main__.cpython-39.pyc
-postgresql/__pycache__/main.cpython-39.pyc
+ postgresql/__pycache__/
 
 
 # Installer logs
