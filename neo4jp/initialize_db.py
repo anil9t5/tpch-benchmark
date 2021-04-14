@@ -2,18 +2,22 @@ from neo4j import GraphDatabase
 from py2neo import Graph
 
 class InitilizeDB(object):
-    URI = "neo4j://localhost:7687"
-    #DRIVER = None
+    DATABASE = 'tpch'
+    USER = 'neo4j'
+    PASSWORD = '1'
+    #URI = "neo4j://localhost:7687"
+    URI = "bolt://localhost:7687"
     GRAPHS = None
+    #DRIVER = None
 
-    try:
-        def init():
-            # InitilizeDB.DRIVER = GraphDatabase.driver(InitilizeDB.URI, auth=("neo4j", "1"))
-            # return InitilizeDB.DRIVER
-            InitilizeDB.GRAPHS = Graph("bolt://localhost:7687", auth=("neo4j", "1"))
-            return InitilizeDB.GRAPHS
+    @staticmethod
+    def init():
 
-        # def start_session():
-        #     return InitilizeDB.DRIVER.session()
-    except:
-        print("py2neo ERROR:")
+
+        # InitilizeDB.DRIVER = GraphDatabase.driver(InitilizeDB.URI, auth=("neo4j", "1"))
+        # return InitilizeDB.DRIVER
+        InitilizeDB.GRAPHS = Graph(InitilizeDB.URI, auth=(InitilizeDB.USER, InitilizeDB.PASSWORD))
+        return InitilizeDB.GRAPHS
+
+    # def start_session():
+    #     return InitilizeDB.DRIVER.session()
