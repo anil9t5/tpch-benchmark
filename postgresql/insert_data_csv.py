@@ -213,10 +213,11 @@ class InsertDataCsv:
         # InsertDataCsv.insert_PART(self)
         # InsertDataCsv.insert_SUPPLIER(self)
         # InsertDataCsv.insert_PARTSUPP(self)
-          InsertDataCsv.insert_CUSTOMER(self)
-        # InsertDataCsv.insert_ORDERS_LINEITEM(self)
+        # InsertDataCsv.insert_CUSTOMER(self)
+        # InsertDataCsv.insert_ORDERS(self)
+        InsertDataCsv.insert_LINEITEM(self)
         # InsertDataCsv.insert_NATION(self)
-        # InsertDataCsv.insert_REGION(self)
+        InsertDataCsv.insert_REGION(self)
 
 
 
