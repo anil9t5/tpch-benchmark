@@ -168,8 +168,8 @@ class InsertData:
             '    partsupp.PS_SUPPLYCOST = TOFLOAT(line.PS_SUPPLYCOST), '
             '    partsupp.PS_COMMENT = line.PS_COMMENT,'
             
-            
             'CREATE INDEX ON :PARTSUPP(PS_PARTKEY);'
+            'CREATE INDEX ON :PARTSUPP(PS_SUPPKEY) '
         )
 
     @staticmethod
@@ -305,9 +305,32 @@ class InsertData:
             'LOAD CSV WITH HEADERS FROM "file:///rel_part_partsupp.csv" AS row FIELDTERMINATOR  "|" '
             'MATCH (partsupp:PARTSUPP {PS_PARTKEY: toInteger(row.P_PARTKEY)}) '
             'MATCH (part:PART {id: toInteger(row.P_PARTKEY)}) '
-            'MERGE (partsupp)-[:COMPOSED_BY_2]->(part);'
+            'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
         )
 
+    @staticmethod
+    def insert_relation_part_partsupp(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_part_partsupp.csv" AS row FIELDTERMINATOR  "|" '
+            'MATCH (partsupp:PARTSUPP {PS_PARTKEY: toInteger(row.P_PARTKEY)}) '
+            'MATCH (part:PART {id: toInteger(row.P_PARTKEY)}) '
+            'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
+        )
+
+    @staticmethod
+    def insert_relation_supplier_partsupp(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_supplier_partsupp.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (partsupp:PARTSUPP {PS_PARTKEY:toInteger(row.PS_PARTKEY) , PS_SUPPKEY: ' 'toInteger(row.PS_SUPPKEY)}) '
+            'MATCH (supplier:SUPPLIER {id: toInteger(row.PS_SUPPKEY)}) '
+            'MERGE (partsupp)-[:SUPPLIED_BY_3]->(supplier);'
+        )
 
 #---------------------------------------------------
     def insert_nodes(self):
