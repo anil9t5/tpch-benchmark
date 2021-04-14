@@ -51,6 +51,7 @@ class InsertData:
                 'USING PERIODIC COMMIT '
                 'LOAD CSV WITH HEADERS '
                 'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" '
+                
                 'SPLIT(line.L_SHIPDATE," / ") AS SHIPDATE, '
                 'SPLIT(line.L_COMMITDATE," / ") AS COMMITDATE, '
                 'SPLIT(line.L_RECEIPTDATE," / ") AS RECEIPTDATE '
@@ -83,6 +84,8 @@ class InsertData:
                 '    lineItem.L_RECEIPTDATE_DAY = TOINT(RECEIPTDATE[0]),'
                 '    lineItem.L_RECEIPTDATE_MONTH = TOINT(RECEIPTDATE[1]),'
                 '    lineItem.L_RECEIPTDATE_YEAR = TOINT(RECEIPTDATE[2]), '
+                
+                
                 'CREATE INDEX ON :LINEITEM(L_SUPPKEY) '
                 'CREATE INDEX ON :LINEITEM(L_ORDERKEY) '
                 'CREATE INDEX ON :LINEITEM(L_PARTKEY) '
@@ -163,9 +166,36 @@ class InsertData:
             'SET partsupp.PS_SUPPKEY = TOINTEGER(line.PS_SUPPKEY), '
             '    partsupp.PS_AVAILQTY = TOINTEGER(line.PS_AVAILQTY), '
             '    partsupp.PS_SUPPLYCOST = TOFLOAT(line.PS_SUPPLYCOST), '
-            '    partsupp.PS_COMMENT = line.PS_COMMENT; '
+            '    partsupp.PS_COMMENT = line.PS_COMMENT,'
+            
+            
+            'CREATE INDEX ON :PARTSUPP(PS_PARTKEY);'
         )
 
+    @staticmethod
+    def insert_nodes_part(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'CREATE CONSTRAINT ON (p:PART) ASSERT p.id IS UNIQUE;'
+        )
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS '
+            'FROM "file:///part.csv" AS line FIELDTERMINATOR "|" '
+
+            'CREATE (part:PART { id: TOINTEGER(line.P_PARTKEY) }) '
+            'SET part.P_NAME =line.P_NAME,'
+            '    part.P_MFGR = line.P_MFGR,'
+            '    part.P_BRAND = line.P_BRAND,'
+            '    part.P_TYPE = line.P_TYPE,'
+            '    part.P_SIZE = TOINTEGER(line.P_SIZE),'
+            '    part.P_CONTAINER = line.P_CONTAINER,'
+            '    part.P_RETAILPRICE =TOFLOAT( line.P_RETAILPRICE),'
+            '    part.P_COMMENT = line.P_COMMENT; '
+
+        )
 
 #=======================================================
     @staticmethod
@@ -264,6 +294,18 @@ class InsertData:
             'MATCH (orders:ORDER {id: toInteger(row.O_ORDERKEY)}) '
             'MATCH (customer:CUSTOMER {id: toInteger(row.O_CUSTKEY)}) '
             'MERGE (orders)-[:BY_5]->(customer);'
+        )
+
+    @staticmethod
+    def insert_relation_part_partsupp(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_part_partsupp.csv" AS row FIELDTERMINATOR  "|" '
+            'MATCH (partsupp:PARTSUPP {PS_PARTKEY: toInteger(row.P_PARTKEY)}) '
+            'MATCH (part:PART {id: toInteger(row.P_PARTKEY)}) '
+            'MERGE (partsupp)-[:COMPOSED_BY_2]->(part);'
         )
 
 
