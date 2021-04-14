@@ -7,7 +7,7 @@ class InsertData:
         self.db = db
 
     @staticmethod
-    def insert_nation_nodes(self):
+    def insert_nodes_nation(self):
 
         graphDB = InitilizeDB.init()
         graphDB.run(
@@ -23,7 +23,7 @@ class InsertData:
             'nation.N_COMMENT = line.N_COMMENT; ')
 
     @staticmethod
-    def insert_customer_nodes(self):
+    def insert_nodes_customer(self):
         graphDB = InitilizeDB.init()
 
         graphDB.run(
@@ -45,7 +45,7 @@ class InsertData:
         )
 
         @staticmethod
-        def insert_lineItem_nodes(self):
+        def insert_nodes_lineItem(self):
             graphDB = InitilizeDB.init()
             graphDB.run(
                 'USING PERIODIC COMMIT '
@@ -90,7 +90,7 @@ class InsertData:
             )
 
     @staticmethod
-    def insert_region_nodes(self):
+    def insert_nodes_region(self):
         graphDB = InitilizeDB.init()
         graphDB.run(
             'CREATE CONSTRAINT ON (r:REGION) ASSERT r.id IS UNIQUE;'
@@ -102,6 +102,53 @@ class InsertData:
             'CREATE (region:REGION { id: TOINTEGER(line.R_REGIONKEY) }) '
             'SET region.R_NAME = line.R_NAME,	'
             '    region.R_COMMENT = line.R_COMMENT; '
+            )
+
+        @staticmethod
+        def insert_nodes_supplier(self):
+            graphDB = InitilizeDB.init()
+
+            graphDB.run(
+                'CREATE CONSTRAINT ON (s:SUPPLIER) ASSERT s.id IS UNIQUE; '
+            )
+
+            graphDB.run(
+                'USING PERIODIC COMMIT '
+                'LOAD CSV WITH HEADERS  '
+                'FROM "file:///supplier.csv" AS line FIELDTERMINATOR "|" '
+                'CREATE (supplier:SUPPLIER { id: TOINTEGER(line.S_SUPPKEY) }) '
+                'SET supplier.S_NAME = line.S_NAME, '
+                '	supplier.S_ADDRESS = line.S_ADDRESS, '
+                '    supplier.S_NATIONKEY = line.S_NATIONKEY, '
+                '    supplier.S_PHONE = line.S_PHONE, '
+                '    supplier.S_ACCTBAL = line.S_ACCTBAL, '
+                '    supplier.S_COMMENT = line.S_COMMENT; '
+            )
+
+        @staticmethod
+        def insert_nodes_orders(self):
+            graphDB = InitilizeDB.init()
+            graphDB.run(
+                'CREATE CONSTRAINT ON (o:ORDER) ASSERT o.id IS UNIQUE;'
+            )
+            graphDB.run(
+                'USING PERIODIC COMMIT '
+                'LOAD CSV WITH HEADERS '
+                'FROM "file:///orders.csv" AS line FIELDTERMINATOR "|" '
+                'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
+                
+                'CREATE (order:ORDER { id: TOINTEGER(line.O_ORDERKEY) }) '
+                'SET order.O_CUSTKEY = TOINTEGER(line.O_CUSTKEY),'
+                '    order.O_ORDERSTATUS = line.O_ORDERSTATUS,	'
+                '    order.O_TOTALPRICE = TOFLOAT(line.O_TOTALPRICE),'
+                '    order.O_ORDERDATE = line.O_ORDERDATE,'
+                '    order.O_ORDERPRIORITY = line.O_ORDERPRIORITY,'
+                '    order.O_CLERK = line.O_CLERK,'
+                '    order.O_SHIPPRIORITY = line.O_SHIPPRIORITY,'
+                '    order.O_COMMENT = line.O_COMMENT,'
+                '    order.O_YEAR = TOINTEGER(date[2]),'
+                '    order.O_MONTH = TOINTEGER(date[1]),'
+                '    order.O_DAY = TOINTEGER(date[0]) '
             )
 
 #=======================================================
@@ -179,17 +226,27 @@ class InsertData:
             'MERGE (nation)-[:FROM_10]->(region);'
         )
 
+    @staticmethod
+    def insert_relation_nation_supplier(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_nation_supplier.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (supplier:SUPPLIER {id: toInteger(row.S_SUPPKEY)}) '
+            'MATCH (nation:NATION {id: toInteger(row.S_NATIONKEY)}) '
+            'MERGE (supplier)-[:BELONGS_TO_1]->(nation);'
+        )
+
 
 
 
 
 #---------------------------------------------------
     def insert_nodes(self):
-        #InsertData.insert_nation_nodes(self)
-        #InsertData.insert_customer_nodes(self)
-        InsertData.insert_customer_nodes(self)
-        InsertData.insert_customer_nodes(self)
-        InsertData.insert_customer_nodes(self)
+        #InsertData.insert_nodes_nation(self)
+        #InsertData.insert_nodes_customer(self)
+        pass
 
 
 
