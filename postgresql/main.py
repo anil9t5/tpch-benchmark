@@ -12,8 +12,8 @@ def main():
         task = Tables()
         task.create_tables()
 
-    insert_data =False
-    read_from_csv=True
+    insert_data = True
+    read_from_csv = True
     if insert_data:
         if read_from_csv:
             insert_task=InsertDataCsv(1)
@@ -27,7 +27,7 @@ def main():
         query = RunQueries()
         query.run_queries()
 
-    export_csv_data=True
+    export_csv_data=False
     if export_csv_data:
         export_task = ExportDataCsv()
         export_task.export_to_csv()

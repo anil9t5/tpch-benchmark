@@ -7,6 +7,8 @@ import csv
 from datetime import datetime, timedelta
 
 class InsertDataCsv:
+
+    csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/"
     def __init__(self, scale_factor):
         super().__init__()
         self.scale_factor = scale_factor
@@ -92,99 +94,59 @@ class InsertDataCsv:
     #         if conn is not None:
     #             conn.close()
     #
-    # # ---------------------------------
-    # @staticmethod
-    # def insert_SUPPLIER(self):
-    #     conn = None
-    #     try:
-    #         params = config()
-    #         conn = psycopg2.connect(**params)
-    #         cur = conn.cursor()
-    #
-    #         data_size = int(self.scale_factor * 10000)
-    #
-    #         keys = list(range(data_size))
-    #         random.shuffle(keys)
-    #
-    #         comment_ratio = int(self.scale_factor * 5)
-    #
-    #         for i in range(data_size):
-    #             S_SUPPKEY = keys[i]
-    #             S_NAME = "Supplier#r"+"{:09d}".format(S_SUPPKEY)
-    #
-    #             S_ADDRESS =InsertData.generate_random_string_data(random.randint(10, 40))
-    #
-    #             S_NATIONKEY =random.randint(0, 24)
-    #
-    #             country_code=S_NATIONKEY+10
-    #             local_number1=random.randint(100, 999)
-    #             local_number2 = random.randint(100, 999)
-    #             local_number3 = random.randint(1000, 9999)
-    #             S_PHONE=str(country_code)+ "-"+ str(local_number1)+"-"+str(local_number2)+"-"+str(local_number3)
-    #
-    #             S_ACCTBAL='{:.2f}'.format(random.uniform(-999.99, 9999.99))
-    #
-    #             comment=InsertData.generate_random_string_data(random.randint(25, 100))
-    #             if S_SUPPKEY<comment_ratio:
-    #                 while (comment<25 or comment>100):
-    #                     comment=InsertData.generate_random_string_data(random.randint(0, 20))+"Customer " + InsertData.generate_random_string_data(random.randint(0, 20)) + "Complaints"+InsertData.generate_random_string_data(random.randint(0, 20))
-    #             if S_SUPPKEY > data_size-comment_ratio:
-    #                 while (comment < 25 or comment > 100):
-    #                     comment=InsertData.generate_random_string_data(random.randint(0, 20))+"Customer " + InsertData.generate_random_string_data(random.randint(0, 20)) + "Recommends"+InsertData.generate_random_string_data(random.randint(0, 20))
-    #             S_COMMENT = comment
-    #
-    #             cur.execute(
-    #                 "INSERT INTO SUPPLIER(S_SUPPKEY, S_NAME, S_ADDRESS, S_NATIONKEY,  S_PHONE,  S_ACCTBAL,  S_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-    #                 (str(S_SUPPKEY), S_NAME, S_ADDRESS, str(S_NATIONKEY), S_PHONE, str(S_ACCTBAL), S_COMMENT))
-    #
-    #         cur.close()
-    #         conn.commit()
-    #
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print(error)
-    #
-    #     finally:
-    #         if conn is not None:
-    #             conn.close()
-    #
-    # #---------------------------------
-    # @staticmethod
-    # def insert_PARTSUPP(self):
-    #     conn = None
-    #     try:
-    #         params = config()
-    #         conn = psycopg2.connect(**params)
-    #         cur = conn.cursor()
-    #
-    #         data_size = int(self.scale_factor * 200000)
-    #
-    #         #Repeating Keys generated in part table
-    #         keys = list(range(data_size))
-    #
-    #         S = self.scale_factor * 10000
-    #
-    #         for ind_part in range(data_size):
-    #             for ind_partSupp in range (4):
-    #                 PS_PARTKEY = keys[ind_part]
-    #                 PS_SUPPKEY =int( ((PS_PARTKEY + (ind_partSupp * ((S/4) + ((int(PS_PARTKEY-1 ))/S)))) % S) + 1)
-    #
-    #                 PS_AVAILQTY=random.randint(1,9999)
-    #                 PS_SUPPLYCOST= random.uniform(1.0,1000.0)
-    #                 PS_COMMENT= InsertData.generate_random_string_data(random.randint(49, 198))
-    #
-    #                 cur.execute(
-    #                     "INSERT INTO PARTSUPP(PS_PARTKEY, PS_SUPPKEY, PS_AVAILQTY, PS_SUPPLYCOST, PS_COMMENT) VALUES (%s, %s, %s, %s, %s)",
-    #                     (str(PS_PARTKEY), str(PS_SUPPKEY), str(PS_AVAILQTY),str(PS_SUPPLYCOST),PS_COMMENT ))
-    #
-    #         cur.close()
-    #         conn.commit()
-    #
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print(error)
-    #
-    #     finally:
-    #         if conn is not None:
-    #             conn.close()
+    # ---------------------------------
+    @staticmethod
+    def insert_SUPPLIER(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
+            with open(InsertDataCsv.csv_path + 'supplier.csv', 'r') as f:
+                reader = csv.reader(f, delimiter='|')
+                next(reader)  # Skip the header row.
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO SUPPLIER(S_SUPPKEY, S_NAME, S_ADDRESS, S_NATIONKEY,  S_PHONE,  S_ACCTBAL,  S_COMMENT) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        row
+                    )
+            cur.close()
+            conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
+
+
+    @staticmethod
+    def insert_PARTSUPP(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
+            with open(InsertDataCsv.csv_path+'partsupp.csv', 'r') as f:
+                reader = csv.reader(f, delimiter='|')
+                next(reader)  # Skip the header row.
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO PARTSUPP(PS_PARTKEY, PS_SUPPKEY, PS_AVAILQTY, PS_SUPPLYCOST, PS_COMMENT) VALUES (%s, %s, %s, %s, %s)",
+                        row
+                    )
+            cur.close()
+            conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     #---------------------------------
@@ -196,7 +158,7 @@ class InsertDataCsv:
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
 
-            with open('data_csv//customer.csv', 'r') as f:
+            with open(InsertDataCsv.csv_path+'customer.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
                 next(reader)  # Skip the header row.
                 for row in reader:
@@ -344,7 +306,7 @@ class InsertDataCsv:
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
 
-            with open('data_csv//nation.csv', 'r') as f:
+            with open(InsertDataCsv.csv_path+'nation.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
                 next(reader)  # Skip the header row.
                 for row in reader:
@@ -362,34 +324,32 @@ class InsertDataCsv:
             if conn is not None:
                 conn.close()
 
-    # # ---------------------------------
-    # @staticmethod
-    # def insert_REGION(self):
-    #     conn = None
-    #     try:
-    #         params = config()
-    #         conn = psycopg2.connect(**params)
-    #         cur = conn.cursor()
-    #
-    #         data_size =5
-    #         region_names = ["AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"]
-    #
-    #         for i in range(data_size):
-    #             R_REGIONKEY=i
-    #             R_NAME=region_names[i]
-    #             R_COMMENT=InsertData.generate_random_string_data(random.randint(31,115))
-    #             cur.execute(
-    #                 "INSERT INTO REGION(R_REGIONKEY,R_NAME,R_COMMENT) VALUES (%s, %s, %s)",
-    #                 (str(R_REGIONKEY), R_NAME, R_COMMENT))
-    #         cur.close()
-    #         conn.commit()
-    #
-    #     except (Exception, psycopg2.DatabaseError) as error:
-    #         print(error)
-    #
-    #     finally:
-    #         if conn is not None:
-    #             conn.close()
+    # ---------------------------------
+    @staticmethod
+    def insert_REGION(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
+            with open(InsertDataCsv.csv_path+'nation.csv', 'r') as f:
+                reader = csv.reader(f, delimiter='|')
+                next(reader)  # Skip the header row.
+                for row in reader:
+                    cur.execute(
+                        "INSERT INTO REGION(R_REGIONKEY,R_NAME,R_COMMENT) VALUES (%s, %s, %s)",
+                        row
+                    )
+            cur.close()
+            conn.commit()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
 
     # # ---------------------------------
     # @staticmethod
@@ -402,7 +362,7 @@ class InsertDataCsv:
         # InsertDataCsv.insert_PART(self)
         # InsertDataCsv.insert_SUPPLIER(self)
         # InsertDataCsv.insert_PARTSUPP(self)
-         InsertDataCsv.insert_CUSTOMER(self)
+          InsertDataCsv.insert_CUSTOMER(self)
         # InsertDataCsv.insert_ORDERS_LINEITEM(self)
         # InsertDataCsv.insert_NATION(self)
         # InsertDataCsv.insert_REGION(self)
