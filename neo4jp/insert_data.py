@@ -238,8 +238,17 @@ class InsertData:
             'MERGE (supplier)-[:BELONGS_TO_1]->(nation);'
         )
 
+    @staticmethod
+    def insert_relation_orders_customer(self):
+        graphDB = InitilizeDB.init()
 
-
+        graphDB.run(
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_orders_customer.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (orders:ORDER {id: toInteger(row.O_ORDERKEY)}) '
+            'MATCH (customer:CUSTOMER {id: toInteger(row.O_CUSTKEY)}) '
+            'MERGE (orders)-[:BY_5]->(customer);'
+        )
 
 
 #---------------------------------------------------
