@@ -42,9 +42,21 @@ class InsertData:
             'customer.C_MKTSEGMENT = line.C_MKTSEGMENT, '
             'customer.C_COMMENT = line.C_COMMENT; ')
 
+    @staticmethod
+    def insert_relation_customer_nation(self):
+        graphDB = InitilizeDB.init()
+
+        graphDB.run(
+            'LOAD CSV WITH HEADERS FROM "file:///custnationrelation.csv" AS row FIELDTERMINATOR "|"'
+            'MATCH (customer:CUSTOMER {id: toInteger(row.C_CUSTKEY)})'
+            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)})'
+            'MERGE (customer)-[:FROM_4]->(nation);')
+
     def insert_nodes(self):
         #InsertData.insert_nation_nodes(self)
-        InsertData.insert_customer_nodes(self)
+        #InsertData.insert_customer_nodes(self)
+        pass
 
     def insert_relations(self):
+        InsertData.insert_relation_customer_nation(self)
         pass
