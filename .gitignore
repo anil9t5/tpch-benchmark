@@ -21,6 +21,16 @@ var/
 .installed.cfg
 *.egg
 
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/tpch-benchmark.iml
+.idea/vcs.xml
+requirement.txt
+
+ postgresql/__pycache__/
+
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
