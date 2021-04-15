@@ -268,7 +268,7 @@ class ExportDataCsv:
             if conn is not None:
                 conn.close()
 
-    # --------------
+
     @staticmethod
     def export_rel_supplier_partsupp(self):
         conn = None
