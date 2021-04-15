@@ -138,7 +138,7 @@ class ExportDataCsv:
             if conn is not None:
                 conn.close()
 
-    # --------------
+
     @staticmethod
     def export_rel_lineitem_supplier(self):
         conn = None
@@ -163,6 +163,62 @@ class ExportDataCsv:
         finally:
             if conn is not None:
                 conn.close()
+
+
+    @staticmethod
+    def export_rel_nation_region(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_nation_region"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                (SELECT N_NATIONKEY, N_REGIONKEY  
+                FROM nation AS n INNER JOIN region AS r 
+                ON r.R_REGIONKEY = n.N_REGIONKEY) 
+                TO '{0}{1}.csv' 
+                DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+
+    # --------------
+    @staticmethod
+    def export_rel_nation_supplier(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_nation_supplier"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                    (SELECT S_SUPPKEY, S_NATIONKEY 
+                    FROM nation AS n INNER JOIN supplier AS s 
+                    ON n.N_NATIONKEY = s.S_NATIONKEY) 
+                    TO '{0}{1}.csv' 
+                    DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+
+
+
+
 
 
 
