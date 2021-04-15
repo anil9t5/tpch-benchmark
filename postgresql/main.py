@@ -22,7 +22,7 @@ def main():
             insert_task = InsertData(0.05)
             insert_task.insert_to_tables()
 
-    run_queries=True
+    run_queries=False
     if run_queries:
         query = RunQueries()
         query.run_queries()

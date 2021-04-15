@@ -18,8 +18,8 @@ class RunQueries:
             params = config()
             conn = psycopg2.connect(**params)
 
-            # q1= Query1(conn)
-            # q1.execute()
+            q1= Query1(conn)
+            q1.execute()
 
             # q2=Query2(conn)
             # q2.execute()
