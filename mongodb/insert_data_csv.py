@@ -20,7 +20,7 @@ class InsertDataCsv:
     @staticmethod
     def csv_to_json(filename, header=None):
         data = pd.read_csv(filename, header=header,
-                           error_bad_lines=False, warn_bad_lines=False)
+                           error_bad_lines=False, warn_bad_lines=False, delimiter='|')
         return data.to_dict('records')
 
     @staticmethod
