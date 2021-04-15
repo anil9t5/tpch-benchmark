@@ -43,7 +43,7 @@ class Query1:
             print("Start time: " + str(ts))
             print("End time: " + str(te))
             print("In seconds: " + str("{:.7f}".format(te - ts)))
-            #print(resultAll)
+            print(resultAll)
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)

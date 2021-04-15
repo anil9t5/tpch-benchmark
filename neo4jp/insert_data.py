@@ -217,9 +217,11 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_orders.csv" AS row FIELDTERMINATOR "|" ' 
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY:' 'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER:' 'toInteger(row.L_LINENUMBER) }) '
-            'MATCH (orders:ORDER {id: toInteger(row.L_ORDERKEY), O_CUSTKEY: toInteger(row.O_CUSTKEY)})'
-            'MERGE (lineitem)-[:BELONGS_TO_7]->(orders);'
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: ' 
+            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: ' 
+            'toInteger(row.L_LINENUMBER) }) '
+            'MATCH (orders:ORDER {id: toInteger(row.L_ORDERKEY), O_CUSTKEY: toInteger(row.O_CUSTKEY)}) '
+            'MERGE (lineitem)-[:BELONGS_TO_7]->(orders); '
         )
 
     @staticmethod
@@ -308,17 +310,6 @@ class InsertData:
             'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
         )
 
-    @staticmethod
-    def insert_relation_part_partsupp(self):
-        graphDB = InitilizeDB.init()
-
-        graphDB.run(
-            'USING PERIODIC COMMIT '
-            'LOAD CSV WITH HEADERS FROM "file:///rel_part_partsupp.csv" AS row FIELDTERMINATOR  "|" '
-            'MATCH (partsupp:PARTSUPP {PS_PARTKEY: toInteger(row.P_PARTKEY)}) '
-            'MATCH (part:PART {id: toInteger(row.P_PARTKEY)}) '
-            'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
-        )
 
     @staticmethod
     def insert_relation_supplier_partsupp(self):

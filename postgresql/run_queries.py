@@ -21,17 +21,17 @@ class RunQueries:
             q1= Query1(conn)
             q1.execute()
 
-            q2=Query2(conn)
-            q2.execute()
-
-            q3 = Query3(conn)
-            q3.exescute()
-
-            q4 = Query4(conn)
-            q4.execute()
-
-            q5 = Query5(conn)
-            q5.execute()
+            # q2=Query2(conn)
+            # q2.execute()
+            #
+            # q3 = Query3(conn)
+            # q3.exescute()
+            #
+            # q4 = Query4(conn)
+            # q4.execute()
+            #
+            # q5 = Query5(conn)
+            # q5.execute()
 
 
 
