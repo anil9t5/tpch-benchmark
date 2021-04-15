@@ -190,7 +190,7 @@ class ExportDataCsv:
             if conn is not None:
                 conn.close()
 
-    # --------------
+
     @staticmethod
     def export_rel_nation_supplier(self):
         conn = None
@@ -217,11 +217,82 @@ class ExportDataCsv:
                 conn.close()
 
 
+    @staticmethod
+    def export_rel_orders_customer(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_orders_customer"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                        (SELECT O_ORDERKEY, O_CUSTKEY 
+                        FROM orders AS o INNER JOIN customer AS c 
+                        ON o.O_CUSTKEY = c.C_CUSTKEY) 
+                        TO '{0}{1}.csv' 
+                        DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
 
+    @staticmethod
+    def export_rel_part_partsupp(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_part_partsupp"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                            (SELECT P_PARTKEY, P_PARTKEY 
+                            FROM part AS p INNER JOIN partsupp AS s 
+                            ON p.P_PARTKEY = s.PS_PARTKEY) 
+                            TO '{0}{1}.csv' 
+                            DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
-
-
+    # --------------
+    @staticmethod
+    def export_rel_supplier_partsupp(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_supplier_partsupp"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                                (SELECT PS_PARTKEY, PS_SUPPKEY 
+                                FROM supplier AS s INNER JOIN partsupp AS p 
+                                ON s.S_SUPPKEY = p.PS_SUPPKEY) 
+                                TO '{0}{1}.csv' 
+                                DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 
