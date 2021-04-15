@@ -6,7 +6,6 @@ from mongodb.query4 import Query4
 from mongodb.query5 import Query5
 
 
-
 class RunQueries:
     def __init__(self):
         super().__init__()
@@ -21,10 +20,9 @@ class RunQueries:
         # query3 = Query3()
         # query3.execute()
 
-
         # query4 = Query4()
         # query4.execute()
 
-        query5 = Query5()
-        query5.execute()
-
+        # query5 = Query5()
+        # query5.execute()
+        print("No queries..")

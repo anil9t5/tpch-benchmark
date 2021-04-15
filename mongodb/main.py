@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from mongodb.collections import Collections
-from mongodb.insert_data import InsertData
+from mongodb.insert_data_csv import InsertDataCsv
 from mongodb.run_queries import RunQueries
 from mongodb.initialize_db import InitilizeDB
 
@@ -14,7 +14,7 @@ def main():
         task = Collections(db)
         task.create_collections()
 
-        insert_task = InsertData(0.05, db)
+        insert_task = InsertDataCsv(0.05, db)
         insert_task.insert_to_collections()
     else:
         query = RunQueries()
