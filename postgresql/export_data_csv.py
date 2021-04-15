@@ -83,7 +83,7 @@ class ExportDataCsv:
             if conn is not None:
                 conn.close()
 
-#--------------
+
     @staticmethod
     def export_rel_lineitem_part(self):
         conn = None
@@ -110,11 +110,59 @@ class ExportDataCsv:
                 conn.close()
 
 
+    @staticmethod
+    def export_rel_lineitem_partsupp(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_lineitem_partsupp"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+                (SELECT L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER, PS_PARTKEY, PS_SUPPKEY  
+                FROM lineitem AS l 
+                INNER JOIN partsupp AS p 
+                ON l.L_PARTKEY = p.PS_PARTKEY 
+                INNER JOIN partsupp AS s
+                ON l.L_SUPPKEY = s.PS_SUPPKEY
+                TO '{0}{1}.csv' 
+                DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
-
-
-
-
+    # --------------
+    @staticmethod
+    def export_rel_lineitem_supplier(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "rel_lineitem_supplier"
+            path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+            command = '''COPY 
+               (SELECT L_ORDERKEY,L_PARTKEY,L_SUPPKEY,L_LINENUMBER,L_SUPPKEY  
+               FROM lineitem AS l INNER JOIN supplier AS s 
+               ON l.L_SUPPKEY = s.S_SUPPKEY) 
+               TO '{0}{1}.csv' 
+               DELIMITER '|' CSV HEADER;'''.format(path, file_name)
+            print(command)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 
