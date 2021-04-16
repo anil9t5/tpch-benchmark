@@ -44,3 +44,4 @@ mongodb/data_csv/
 .DS_Store
 mongodb/.DS_Store
 
+mongodb/exports/

@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 
 class InsertDataCsv:
     csv_path = '/Users/anilhitang/Documents/winter-2021/CS6545/tpch-benchmark/mongodb/data_csv/'
+    rel_csv_path = '/Users/anilhitang/Documents/winter-2021/CS6545/tpch-benchmark/mongodb/exports/'
 
     def __init__(self, scale_factor, db):
         super().__init__()
@@ -22,6 +23,11 @@ class InsertDataCsv:
         data = pd.read_csv(filename, header=header,
                            error_bad_lines=False, warn_bad_lines=False, delimiter='|')
         return data.to_dict('records')
+
+    @staticmethod
+    def rel_lineitem_orders_customer(self):
+        self.db["rel_lineitem_orders_customer"].insert_many(InsertDataCsv.csv_to_json(
+            InsertDataCsv.rel_csv_path+'rel_lineitem_orders_customer.csv', header=0))
 
     @staticmethod
     def region(self):
@@ -72,3 +78,4 @@ class InsertDataCsv:
         InsertDataCsv.insert_customer(self)
         InsertDataCsv.insert_line_item(self)
         InsertDataCsv.insert_orders(self)
+        InsertDataCsv.rel_lineitem_orders_customer(self)
