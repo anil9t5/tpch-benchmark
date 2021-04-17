@@ -38,6 +38,7 @@ pip-delete-this-directory.txt
 database.ini
 mongodb/notes.txt
 venv/
+docker-apache-phoenix/
 
 
 mongodb/data_csv/

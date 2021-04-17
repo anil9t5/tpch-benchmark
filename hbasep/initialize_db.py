@@ -1,0 +1,13 @@
+import phoenixdb
+
+class InitializeDB(object):
+    database_url = 'http://localhost:8765/'
+
+    @staticmethod
+    def init():
+        conn = phoenixdb.connect(database_url, autocommit=True)
+
+
+
+
+
