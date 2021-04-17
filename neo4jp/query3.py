@@ -12,11 +12,11 @@ class Query3:
             start_time = time.time()
 
             result =graphDB.run(
-                "MATCH (lineitem:LINEITEM)-[:IS_PART_OF]->(order:ORDER)-[:MADE_BY]->(customer:CUSTOMER)"
-                "WHERE customer.C_MKTSEGMENT = 'BUILDING' AND date(order.O_ORDERDATE) < date('1995-03-15') AND date(lineitem.L_SHIPDATE) > date('1995-03-15')"
-                "RETURN order.id, sum(lineitem.L_EXTENDEDPRICE*(1-lineitem.L_DISCOUNT)) AS REVENUE, order.O_ORDERDATE, order.O_SHIPPRIORITY"
-                "ORDER BY REVENUE DESC, order.O_ORDERDATE"
-                "LIMIT 10;")
+                "MATCH (lineitem:LINEITEM)-[:IS_PART_OF]->(order:ORDER)-[:MADE_BY]->(customer:CUSTOMER) "
+                "WHERE customer.C_MKTSEGMENT = 'BUILDING' AND date(order.O_ORDERDATE) < date('1995-03-15') AND date(lineitem.L_SHIPDATE) > date('1995-03-15') "
+                "RETURN order.id, sum(lineitem.L_EXTENDEDPRICE*(1-lineitem.L_DISCOUNT)) AS REVENUE, order.O_ORDERDATE, order.O_SHIPPRIORITY "
+                "ORDER BY REVENUE DESC, order.O_ORDERDATE "
+                "LIMIT 10; ")
 
             print(list(result))
             end_time = time.time()
