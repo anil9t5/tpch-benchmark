@@ -21,7 +21,7 @@ class Tables:
 
             # Empty database by dropping tables
             for table_name in table_names:
-                cur.execute("DROP TABLE IF EXISTS {};".format(table_name))
+                cur.execute("DROP TABLE IF EXISTS {0};".format(table_name))
 
             # Create tables...
             """ create tables in the PostgreSQL database"""
@@ -126,7 +126,7 @@ class Tables:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
