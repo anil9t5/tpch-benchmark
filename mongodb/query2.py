@@ -1,94 +1,64 @@
 from mongodb.initialize_db import InitilizeDB
 from bson.son import SON
+import pymongo
 from pymongo import errors
 import datetime
 import time
 
 
 class Query2:
+    URI = "mongodb://127.0.0.1:27017"
+    DATABASE = None
+
     def __init__(self):
         super().__init__()
 
     def execute(self):
         try:
-            collection = InitilizeDB.init()
+            client = pymongo.MongoClient(Query2.URI)
+            Query2.DATABASE = client["jointpch"]
+            db = Query2.DATABASE
 
             pipeline = [
-                {"$lookup": {
-                    "from": "supplier",
-                    "localField": "PS_SUPPKEY",
-                    "foreignField": "S_SUPPKEY",
-                    "as": "supplier_docs"
-                }},
-                {
-                    "$unwind": "$supplier_docs"
-                },
-
-                {"$lookup": {
-                    "from": "nation",
-                    "localField": "supplier_docs.S_NATIONKEY",
-                    "foreignField": "N_NATIONKEY",
-                    "as": "nation_docs"
-                }
-                },
-                {
-                    "$unwind": "$nation_docs"
-                },
-                {"$lookup": {
-                    "from": "part",
-                    "localField": "PS_PARTKEY",
-                    "foreignField": "P_PARTKEY",
-                    "as": "part_docs"
-                }},
-                {
-                    "$unwind": "$part_docs"
-                },
-                {"$lookup": {
-                    "from": "region",
-                    "localField": "nation_docs.N_REGIONKEY",
-                    "foreignField": "R_REGIONKEY",
-                    "as": "region_docs"
-                }},
-                {
-                    "$unwind": "$region_docs"
-                },
-                {"$match": {
-                    "part_docs.P_SIZE": 17,
-                    "part_docs.P_TYPE": {"$regex": "BRASS", "$options": "g"},
-                    "region_docs.R_NAME": "EUROPE",
-                    "compare_region_key": {"$eq": 0}
-                }
-                },
                 {
                     "$project": {
-                        "supplier_docs.S_ACCTBAL": 1,
-                        "supplier_docs.S_NAME": 1,
-                        "nation_docs.N_NAME": 1,
-                        "part_docs.P_PARTKEY": 1,
-                        "part_docs.P_MFGR": 1,
-                        "supplier_docs.S_ADDRESS": 1,
-                        "supplier_docs.S_PHONE": 1,
-                        "supplier_docs.S_COMMENT": 1,
-                        "PS_SUPPLYCOST": 1,
-                        "compare_region_key": {
-                            "$cmp": ["$nation_docs.N_REGIONKEY", "$region_docs.R_REGIONKEY"]
+                        "partsupp.supplier.S_ACCTBAL": 1,
+                        "partsupp.supplier.S_NAME": 1,
+                        "partsupp.supplier.nation.region.R_NAME": 1,
+                        "partsupp.supplier.nation.N_NAME": 1,
+                        "partsupp.part.P_PARTKEY": 1,
+                        "partsupp.part.P_TYPE": 1,
+                        "partsupp.part.P_SIZE": 1,
+                        "partsupp.part.P_MFGR": 1,
+                        "partsupp.supplier.S_ADDRESS": 1,
+                        "partsupp.supplier.S_PHONE": 1,
+                        "partsupp.supplier.S_COMMENT": 1,
+                        "partsupp.PS_SUPPLYCOST": 1,
+                        "c_rkT0s_nk": {
+                            "$cmp": ["$partsupp.supplier.nation.N_NATIONKEY", "$partsupp.supplier.nation.region.R_REGIONKEY"]
                             # $cmp is a compare operator that stores zero,1,-1 in c_nkTOs_nk field. The numbers mean equal/greater/less than respectively
                         }
                     }
                 },
-
+                {"$match": {
+                    "partsupp.part.P_SIZE": 16,
+                    "partsupp.part.P_TYPE": {"$regex": "COPPER", "$options": "g"},
+                    "partsupp.supplier.nation.region.R_NAME": "AFRICA",
+                    "c_rkT0s_nk": {"$eq": 1}
+                }
+                },
                 {
                     "$sort": {
-                        "supplier_docs.S_ACCTBAL": -1,
-                        "nation_docs.N_NAME": 1,
-                        "supplier_docs.S_NAME": 1,
-                        "part_docs.P_PARTKEY": 1
+                        "partsupp.supplier.S_ACCTBAL": -1,
+                        "partsupp.supplier.nation.N_NAME": 1,
+                        "partsupp.supplier.S_NAME": 1,
+                        "partsupp.part.P_PARTKEY": 1
                     }
                 }
             ]
 
             start_time = time.time()
-            collection["partsupp"].aggregate(pipeline)
+            db["deals"].aggregate(pipeline)
 
             end_time = time.time()
             print("---------------Query 2-------------")

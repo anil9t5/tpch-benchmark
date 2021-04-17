@@ -14,7 +14,7 @@ def main():
         task = Collections(db)
         task.create_collections()
 
-        insert_task = InsertDataCsv(0.05, db)
+        insert_task = InsertDataCsv(1, db)
         insert_task.insert_to_collections()
     else:
         query = RunQueries()

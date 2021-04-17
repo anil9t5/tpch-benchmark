@@ -102,7 +102,6 @@ class Query1:
 
             start_time = time.time()
             db["deals"].aggregate(pipeline)
-
             end_time = time.time()
             print("---------------Query 1-------------")
             print("Start time: " + str(start_time))

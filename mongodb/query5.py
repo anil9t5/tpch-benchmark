@@ -4,7 +4,6 @@ from pymongo import errors
 import datetime
 import time
 import random
-# import pymongo
 
 
 class Query5:
