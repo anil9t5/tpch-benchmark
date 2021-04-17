@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from insert_data_csv import InsertDataCsv
-from insert_data import InsertData
-from tables import Tables
-from run_queries import RunQueries
+from hbasep.insert_data_csv import InsertDataCsv
+from hbasep.insert_data import InsertData
+from hbasep.tables import Tables
+from hbasep.run_queries import RunQueries
 
 def main():
     print("HBase db started...")

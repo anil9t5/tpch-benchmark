@@ -2,7 +2,7 @@ import random
 from random import choice
 from string import ascii_lowercase
 import phoenixdb
-from postgresql.config import config
+from hbasep.config import config
 import csv
 from datetime import datetime, timedelta
 

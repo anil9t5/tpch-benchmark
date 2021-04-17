@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import phoenixdb
-from postgresql.config import config
+from hbasep.config import config
 
 
 class Tables:
