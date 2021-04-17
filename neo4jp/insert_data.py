@@ -201,11 +201,11 @@ class InsertData:
         graphDB = InitilizeDB.init()
 
         graphDB.run(
-            'USING PERIODIC COMMIT'
-            'LOAD CSV WITH HEADERS FROM "file:///rel_customer_nation.csv" AS row FIELDTERMINATOR "|"'
-            'MATCH (customer:CUSTOMER {id: toInteger(row.C_CUSTKEY)})'
-            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)})'
-            'MERGE (customer)-[:FROM_4]->(nation);'
+            'USING PERIODIC COMMIT '
+            'LOAD CSV WITH HEADERS FROM "file:///rel_customer_nation.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (customer:CUSTOMER {id: toInteger(row.C_CUSTKEY)}) '
+            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)}) ' 
+            'MERGE (customer)-[:FROM_4]->(nation); '
         )
 
     @staticmethod
@@ -255,8 +255,8 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_supplier.csv" AS row FIELDTERMINATOR "|" '
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY:' 'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER:' 'toInteger(row.L_LINENUMBER)  })'
-            'MATCH (supplier:SUPPLIER {id: toInteger(row.L_SUPPKEY)})'
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY:' 'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER:' 'toInteger(row.L_LINENUMBER)  }) '
+            'MATCH (supplier:SUPPLIER {id: toInteger(row.L_SUPPKEY)}) '
             'MERGE (lineitem)-[:SUPPLIED_BY_9]->(supplier);'
         )
 
@@ -269,7 +269,7 @@ class InsertData:
             'LOAD CSV WITH HEADERS FROM "file:///rel_nation_region.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (nation:NATION {id: toInteger(row.N_NATIONKEY)}) '
             'MATCH (region:REGION {id: toInteger(row.N_REGIONKEY)}) '
-            'MERGE (nation)-[:FROM_10]->(region);'
+            'MERGE (nation)-[:FROM_10]->(region); '
         )
 
     @staticmethod
@@ -281,7 +281,7 @@ class InsertData:
             'LOAD CSV WITH HEADERS FROM "file:///rel_nation_supplier.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (supplier:SUPPLIER {id: toInteger(row.S_SUPPKEY)}) '
             'MATCH (nation:NATION {id: toInteger(row.S_NATIONKEY)}) '
-            'MERGE (supplier)-[:BELONGS_TO_1]->(nation);'
+            'MERGE (supplier)-[:BELONGS_TO_1]->(nation); '
         )
 
     @staticmethod
@@ -293,7 +293,7 @@ class InsertData:
             'LOAD CSV WITH HEADERS FROM "file:///rel_orders_customer.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (orders:ORDER {id: toInteger(row.O_ORDERKEY)}) '
             'MATCH (customer:CUSTOMER {id: toInteger(row.O_CUSTKEY)}) '
-            'MERGE (orders)-[:BY_5]->(customer);'
+            'MERGE (orders)-[:BY_5]->(customer); '
         )
 
     @staticmethod
@@ -318,7 +318,7 @@ class InsertData:
             'LOAD CSV WITH HEADERS FROM "file:///rel_supplier_partsupp.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (partsupp:PARTSUPP {PS_PARTKEY:toInteger(row.PS_PARTKEY) , PS_SUPPKEY: ' 'toInteger(row.PS_SUPPKEY)}) '
             'MATCH (supplier:SUPPLIER {id: toInteger(row.PS_SUPPKEY)}) '
-            'MERGE (partsupp)-[:SUPPLIED_BY_3]->(supplier);'
+            'MERGE (partsupp)-[:SUPPLIED_BY_3]->(supplier); '
         )
 
 #---------------------------------------------------

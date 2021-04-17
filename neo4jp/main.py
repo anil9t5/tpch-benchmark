@@ -12,7 +12,7 @@ def main():
     if insert_data:
         insert_task = InsertData(db)
         insert_task.insert_nodes()
-        # insert_task.insert_relations()
+        insert_task.insert_relations()
 
     run_queries=True
     if run_queries:
