@@ -14,45 +14,26 @@ class Query3:
             collection = InitilizeDB.init()
 
             pipeline = [
-                {"$lookup": {
-                    "from": "customer",
-                    "localField": "cust_key",
-                    "foreignField": "cust_key",
-                    "as": "customer_docs"
-                }},
-
-                {
-                    "$unwind": "$customer_docs"
-                },
-                {"$lookup": {
-                    "from": "lineitem",
-                    "localField": "order_key",
-                    "foreignField": "l_orderkey",
-                    "as": "lineitem_docs"
-                }},
-                {
-                    "$unwind": "$lineitem_docs"
-                },
                 {
                     "$match": {
-                        "customer_docs.mkt_segment": "AUTOMOBILE",
-                        "lineitem_docs.l_shipdate": {
-                            "$gte": datetime.datetime(1995, 3, 1),
+                        "C_MKTSEGMENT": "AUTOMOBILE",
+                        "L_SHIPDATE": {
+                            "$gte": "1995-03-01",
                         },
-                        "order_date": {
-                            "$lte": datetime.datetime(1995, 3, 31),
+                        "O_ORDERDATE": {
+                            "$lte": "1995-03-31",
                         }
                     }
                 },
                 {
                     "$project": {
-                        "order_date": 1,
-                        "ship_priority": 1,
-                        "lineitem_docs.l_extendedprice": 1,
+                        "O_ORDERDATE": 1,
+                        "O_SHIPPRIORITY": 1,
+                        "L_EXTENDEDPRICE": 1,
                         "l_dis_min_1": {
                             "$subtract": [
                                 1,
-                                "$lineitem_docs.l_discount"
+                                "$L_DISCOUNT"
                             ]
                         }
                     }
@@ -61,14 +42,14 @@ class Query3:
                 {
                     "$group": {
                         "_id": {
-                            "order_key": "$lineitems_docs.l_orderkey",
-                            "order_date": "$order_date",
-                            "ship_priority": "$ship_priority"
+                            "O_ORDERKEY": "$L_ORDERKEY",
+                            "O_ORDERDATE": "$O_ORDERDATE",
+                            "O_SHIPPRIORITY": "$O_SHIPPRIORITY"
                         },
                         "revenue": {
                             "$sum": {
                                 "$multiply": [
-                                    "$lineitem_docs.l_extendedprice",
+                                    "$L_EXTENDEDPRICE",
                                     "$l_dis_min_1"
                                 ]
                             }
@@ -78,14 +59,15 @@ class Query3:
                 {
                     "$sort": {
                         "revenue": 1,
-                        "order_date": 1
+                        "O_ORDERDATE": 1
                     }
                 }
             ]
 
             start_time = time.time()
-            result = collection["orders"].aggregate(pipeline)
-            print(list(result))
+            collection["rel_lineitem_orders_customer"].aggregate(
+                pipeline)
+
             end_time = time.time()
             print("---------------Query 3-------------")
             print("Start time: " + str(start_time))
