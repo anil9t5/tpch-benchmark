@@ -5,12 +5,14 @@ import random
 import psycopg2
 from postgresql.config import config
 import csv
+from glob import glob
+
 
 class ExportDataCsv:
-    path="/home/shermin/Desktop/Projs/BigData/Data/exports/"
+    path = "/home/shermin/Desktop/Projs/BigData/Data/exports/"
+
     def __init__(self):
         super().__init__()
-
 
     # @staticmethod
     # def export_CUSTOMER(self):
@@ -42,17 +44,19 @@ class ExportDataCsv:
             params = config()
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
-            file_name="rel_customer_nation"
+            file_name = "rel_customer_nation"
 
             command = '''COPY 
             (SELECT C_CUSTKEY, C_NATIONKEY 
             FROM customer AS c INNER JOIN nation AS n 
             ON c.C_NATIONKEY = n.N_NATIONKEY) 
             TO '{0}{1}.csv' 
-            DELIMITER '|' CSV HEADER;'''.format(ExportDataCsv.path,file_name)
+            DELIMITER '|' CSV HEADER;'''.format(ExportDataCsv.path, file_name)
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -77,12 +81,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_lineitem_part(self):
@@ -101,12 +106,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_lineitem_partsupp(self):
@@ -127,12 +133,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_lineitem_supplier(self):
@@ -151,12 +158,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_nation_region(self):
@@ -181,7 +189,6 @@ class ExportDataCsv:
             if conn is not None:
                 conn.close()
 
-
     @staticmethod
     def export_rel_nation_supplier(self):
         conn = None
@@ -199,12 +206,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_orders_customer(self):
@@ -223,12 +231,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_part_partsupp(self):
@@ -247,12 +256,13 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
-
 
     @staticmethod
     def export_rel_supplier_partsupp(self):
@@ -262,6 +272,9 @@ class ExportDataCsv:
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
             file_name = "rel_supplier_partsupp"
+
+            rel_supplier_partsupp = ExportDataCsv.path + file_name
+
             command = '''COPY 
                                 (SELECT PS_PARTKEY, PS_SUPPKEY 
                                 FROM supplier AS s INNER JOIN partsupp AS p 
@@ -271,31 +284,28 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
+            ExportDataCsv.uppercase_header(
+                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
 
-
-
-    def uppercase_header(self, filename):
-
-        header = ["column_1", "column_2", "column_3"]
-
-        with open(filename, 'r') as fp:
-            reader = csv.DictReader(fp, fieldnames=header)
-
-            # use newline='' to avoid adding new CR at end of line
-            with open('output.csv', 'w', newline='') as fh:
-                writer = csv.DictWriter(fh, fieldnames=reader.fieldnames)
-                writer.writeheader()
-                header_mapping = next(reader)
-                writer.writerows(reader)
+    def uppercase_header(self, path):
+        for fname in glob(path):
+            with open(fname, newline='') as f:
+                reader = csv.reader(f)
+                header = next(reader)
+                header = [column.upper() for column in header]
+                rows = [header] + list(reader)
+            with open(fname, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerows(rows)
 
     def export_to_csv(self):
         # ExportDataCsv.export_rel_customer_nation(self)
-        # ExportDataCsv.export_rel_lineitem_orders(self)
+        ExportDataCsv.export_rel_lineitem_orders(self)
         # ExportDataCsv.export_rel_lineitem_part(self)
         # ExportDataCsv.export_rel_lineitem_partsupp(self)
         # ExportDataCsv.export_rel_lineitem_supplier(self)
@@ -303,5 +313,6 @@ class ExportDataCsv:
         # ExportDataCsv.export_rel_nation_supplier(self)
         # ExportDataCsv.export_rel_orders_customer(self)
         # ExportDataCsv.export_rel_part_partsupp(self)
-        ExportDataCsv.export_rel_supplier_partsupp(self)
+        # ExportDataCsv.export_rel_supplier_partsupp(self)
+
         os.system("sudo chmod -R a+rwx {0}*.csv".format(ExportDataCsv.path))
