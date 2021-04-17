@@ -29,10 +29,9 @@ class ExportDataCsv:
     #         cur.execute(command)
     #         cur.close()
     #         conn.commit()
-    #
     #     except (Exception, psycopg2.DatabaseError) as error:
     #         print(error)
-    #
+    #     ExportDataCsv.uppercase_header(self, ExportDataCsv.path + file_name + '.csv')
     #     finally:
     #         if conn is not None:
     #             conn.close()
@@ -55,8 +54,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -81,8 +78,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -106,8 +101,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -133,8 +126,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -158,8 +149,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -206,8 +195,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -231,8 +218,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -256,8 +241,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -284,8 +267,6 @@ class ExportDataCsv:
             cur.execute(command)
             cur.close()
             conn.commit()
-            ExportDataCsv.uppercase_header(
-                self, ExportDataCsv.path + file_name + '.csv')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
@@ -293,7 +274,7 @@ class ExportDataCsv:
                 conn.close()
 
     def uppercase_header(self, path):
-        for fname in glob(path):
+        for fname in glob(path+'*'):
             with open(fname, newline='') as f:
                 reader = csv.reader(f)
                 header = next(reader)
@@ -304,15 +285,18 @@ class ExportDataCsv:
                 writer.writerows(rows)
 
     def export_to_csv(self):
-        # ExportDataCsv.export_rel_customer_nation(self)
-        ExportDataCsv.export_rel_lineitem_orders(self)
+        ExportDataCsv.export_rel_customer_nation(self)
         # ExportDataCsv.export_rel_lineitem_part(self)
         # ExportDataCsv.export_rel_lineitem_partsupp(self)
         # ExportDataCsv.export_rel_lineitem_supplier(self)
-        # ExportDataCsv.export_rel_nation_region(self)
+        ExportDataCsv.export_rel_nation_region(self)
         # ExportDataCsv.export_rel_nation_supplier(self)
         # ExportDataCsv.export_rel_orders_customer(self)
         # ExportDataCsv.export_rel_part_partsupp(self)
         # ExportDataCsv.export_rel_supplier_partsupp(self)
 
+        # ExportDataCsv.export_rel_lineitem_orders(self)
+        # ExportDataCsv.export_node_lineitem(self)
+
         os.system("sudo chmod -R a+rwx {0}*.csv".format(ExportDataCsv.path))
+        ExportDataCsv.uppercase_header(self, ExportDataCsv.path)
