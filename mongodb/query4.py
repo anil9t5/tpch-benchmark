@@ -14,7 +14,7 @@ class Query4:
     def execute(self):
         try:
             collection = InitilizeDB.init()
-            lineitem_table=collection["lineitem"]
+            lineitem_table = collection["lineitem"]
             orders_table = collection['orders']
 
             all_years = [1993, 1994, 1995, 1996, 1997]
@@ -23,64 +23,65 @@ class Query4:
 
             #datetime.datetime(1994, 5, 9, 0, 0)
             if random_month > 10:
-                random_date = datetime.datetime(full_years[random.randint(0, 3)], random_month, 1, 0, 0)
+                random_date = datetime.datetime(
+                    full_years[random.randint(0, 3)], random_month, 1, 0, 0)
             else:
-                random_date = datetime.datetime(all_years[random.randint(0, 4)], random_month, 1, 0, 0)
+                random_date = datetime.datetime(
+                    all_years[random.randint(0, 4)], random_month, 1, 0, 0)
 
-            temp_pipeline=[
+            temp_pipeline = [
                 {
-                    "$project":{
-                        "_id":0,
-                        "l_orderkey":1,
-                        "eq":{
-                            "$cond":[{
-                                "$lt":["$l_commitdate","$l_receiptdate"]
+                    "$project": {
+                        "_id": 0,
+                        "L_ORDERKEY": 1,
+                        "eq": {
+                            "$cond": [{
+                                "$lt": ["$L_COMMITDATE", "$L_RECEIPTDATE"]
                             },
-                            1,
-                            0
+                                1,
+                                0
                             ]
                         }
                     }
                 },
                 {
-                    "$match":{
-                        "eq":{
-                            "$eq":1
+                    "$match": {
+                        "eq": {
+                            "$eq": 1
                         }
                     }
                 }
             ]
 
-            temp_dict = list(lineitem_table.aggregate(temp_pipeline))
-
-            orderkeys_list = []
-            for item in temp_dict:
-                orderkeys_list.append(item['l_orderkey'])
-
+            # temp_dict = list(lineitem_table.aggregate(temp_pipeline))
+            # orderkeys_list = []
+            # for item in temp_dict:
+            #     orderkeys_list.append(item['L_ORDERKEY'])
 
             pipeline = [
                 {
                     "$project": {
-                        "order_date": 1,
-                        "order_priority": 1,
-                        "order_key":1
+                        "O_ORDERDATE": 1,
+                        "O_ORDERPRIORITY": 1,
+                        "O_ORDERKEY": 1
                     }
                 },
                 {
                     "$match": {
-                        "order_date": {
-                            "$gte": datetime.datetime(1993, 1, 1),
-                            "$lt": datetime.datetime(1994, 1, 1)
+                        "O_ORDERDATE": {
+                            "$gte": "1993-01-01",
+                            "$lt": "1994-01-01",
                         },
-                        "order_key":{
-                            "$in":orderkeys_list
-                        }
+                        # "O_ORDERKEY": {
+                        #     "$in": orderkeys_list
+                        # }
+
                     }
                 },
                 {
                     "$group": {
                         "_id": {
-                            "order_priority": "$order_priority"
+                            "O_ORDERPRIORITY": "$O_ORDERPRIORITY"
                         },
                         "order_count": {
                             "$sum": 1
@@ -89,14 +90,14 @@ class Query4:
                 },
                 {
                     "$sort": {
-                        "order_priority": 1
+                        "O_ORDERPRIORITY": 1
                     }
                 }
             ]
 
             start_time = time.time()
-            result = collection["orders"].aggregate(pipeline)
-            print(list(result))
+            collection["orders"].aggregate(pipeline)
+
             end_time = time.time()
             print("---------------Query 4-------------")
             print("Start time: " + str(start_time))
@@ -105,4 +106,3 @@ class Query4:
 
         except errors.ServerSelectionTimeoutError as err:
             print("pymongo ERROR:", err)
-

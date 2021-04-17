@@ -1,42 +1,48 @@
 from mongodb.initialize_db import InitilizeDB
 from bson.son import SON
+import pymongo
 from pymongo import errors
 import datetime
 import time
 
 
 class Query1:
+    URI = "mongodb://127.0.0.1:27017"
+    DATABASE = None
+
     def __init__(self):
         super().__init__()
 
     def execute(self):
         try:
-            collection = InitilizeDB.init()
+            client = pymongo.MongoClient(Query1.URI)
+            Query1.DATABASE = client["jointpch"]
+            db = Query1.DATABASE
 
             pipeline = [
                 {
                     "$match": {
-                        "l_shipdate": {
-                            "$lte": datetime.datetime(1998, 12, 1)
+                        "L_SHIPDATE": {
+                            "$lte": "1998-12-01"
                         }
                     }
                 },
                 {
                     "$project": {
-                        "l_returnflag": 1,
-                        "l_linestatus": 1,
-                        "l_quantity": 1,
-                        "l_extendedprice": 1,
-                        "l_discount": 1,
+                        "L_RETURNFLAG": 1,
+                        "L_LINESTATUS": 1,
+                        "L_QUANTITY": 1,
+                        "L_EXTENDEDPRICE": 1,
+                        "L_DISCOUNT": 1,
                         "l_dis_min_1": {
                             "$subtract": [
                                 1,
-                                "$l_discount"
+                                "$L_DISCOUNT"
                             ]
                         },
                         "l_tax_plus_1":{
                             "$add": [
-                                "$l_tax",
+                                "$L_TAX",
                                 1
                             ]
                         }
@@ -45,19 +51,19 @@ class Query1:
                 {
                     "$group": {
                         "_id": {
-                            "return_flag": "$l_returnflag",
-                            "line_status": "$l_linestatus"
+                            "L_RETURNFLAG": "$L_RETURNFLAG",
+                            "L_LINESTATUS": "$L_LINESTATUS"
                         },
-                        "l_quantity": {
-                            "$sum": "$l_quantity"
+                        "L_QUANTITY": {
+                            "$sum": "$L_QUANTITY"
                         },
                         "sum_base_price": {
-                            "$sum": "$l_extendedprice"
+                            "$sum": "$L_EXTENDEDPRICE"
                         },
                         "sum_disc_price": {
                             "$sum": {
                                 "$multiply": [
-                                    "$l_extendedprice",
+                                    "$L_EXTENDEDPRICE",
                                     "$l_dis_min_1"
                                 ]
                             }
@@ -65,7 +71,7 @@ class Query1:
                         "sum_charge":{
                             "$sum": {
                                 "$multiply": [
-                                    "$l_extendedprice",
+                                    "$L_EXTENDEDPRICE",
                                     {
                                         "$multiply": [
                                             "$l_tax_plus_1",
@@ -76,10 +82,10 @@ class Query1:
                             }
                         },
                         "avg_price":{
-                            "$avg": "$l_extendedprice"
+                            "$avg": "$L_EXTENDEDPRICE"
                         },
                         "avg_disc": {
-                            "$avg": "$l_discount"
+                            "$avg": "$L_DISCOUNT"
                         },
                         "count_order": {
                             "$sum": 1
@@ -88,15 +94,14 @@ class Query1:
                 },
                 {
                     "$sort": {
-                        "l_returnflag": 1,
-                        "l_linestatus": 1
+                        "L_RETURNFLAG": 1,
+                        "L_LINESTATUS": 1
                     }
                 }
             ]
 
             start_time = time.time()
-            result = collection["lineitem"].aggregate(pipeline)
-            print(list(result))
+            db["deals"].aggregate(pipeline)
             end_time = time.time()
             print("---------------Query 1-------------")
             print("Start time: " + str(start_time))
