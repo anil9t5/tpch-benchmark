@@ -1,4 +1,3 @@
-import psycopg2
 import time
 import random
 
@@ -45,5 +44,5 @@ class Query1:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+        except:
+            print("query1")

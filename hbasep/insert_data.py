@@ -1,7 +1,7 @@
 import random
 from random import choice
 from string import ascii_lowercase
-import psycopg2
+import phoenixdb
 from postgresql.config import config
 from datetime import datetime, timedelta
 
@@ -18,7 +18,7 @@ class InsertData:
         try:
 
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 200000)
@@ -84,7 +84,7 @@ class InsertData:
 
             cur.close()
             conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -97,7 +97,7 @@ class InsertData:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 10000)
@@ -139,7 +139,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -152,7 +152,7 @@ class InsertData:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 200000)
@@ -178,7 +178,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -192,7 +192,7 @@ class InsertData:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 150000)
@@ -224,7 +224,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -245,7 +245,7 @@ class InsertData:
 
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             customer_data_size = int(self.scale_factor * 150000)
@@ -345,7 +345,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -358,7 +358,7 @@ class InsertData:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             #Dict of nation_name["N_NATIONKEY"] = "N_NAME"
@@ -389,7 +389,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:
@@ -402,7 +402,7 @@ class InsertData:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
             cur = conn.cursor()
 
             data_size =5
@@ -418,7 +418,7 @@ class InsertData:
             cur.close()
             conn.commit()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
         finally:

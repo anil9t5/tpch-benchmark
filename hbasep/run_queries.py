@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import psycopg2
+import phoenixdb
 import time
 from postgresql.config import config
 from postgresql.query1 import Query1
@@ -16,7 +16,8 @@ class RunQueries:
         conn = None
         try:
             params = config()
-            conn = psycopg2.connect(**params)
+            conn = phoenixdb.connect(**params)
+            cur = conn.cursor()
 
             q1= Query1(conn)
             q1.execute()
@@ -35,9 +36,8 @@ class RunQueries:
 
 
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-
+        except:
+            print("Error run_queries")
         finally:
             if conn is not None:
                 conn.close()
