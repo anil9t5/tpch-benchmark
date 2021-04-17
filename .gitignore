@@ -38,3 +38,10 @@ pip-delete-this-directory.txt
 database.ini
 mongodb/notes.txt
 venv/
+
+
+mongodb/data_csv/
+.DS_Store
+mongodb/.DS_Store
+
+mongodb/exports/
