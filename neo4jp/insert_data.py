@@ -70,15 +70,15 @@ class InsertData:
             '    lineItem.L_SHIPINSTRUCT = line.L_SHIPINSTRUCT,'
             '    lineItem.L_SHIPMODE = line.L_SHIPMODE,'
             '    lineItem.L_COMMENT = line.L_COMMENT, '
-            '    lineItem.L_SHIPDATE_DAY = TOINT(line.L_SHIPDATE_DAY),'
-            '    lineItem.L_SHIPDATE_MONTH = TOINT(line.L_SHIPDATE_MONTH),'
-            '    lineItem.L_SHIPDATE_YEAR = TOINT(line.L_SHIPDATE_YEAR),'
-            '    lineItem.L_COMMITDATE_DAY = TOINT(line.L_COMMITDATE_DAY),'
-            '    lineItem.L_COMMITDATE_MONTH = TOINT(line.L_COMMITDATE_MONTH),'
-            '    lineItem.L_COMMITDATE_YEAR =TOINT(line.L_COMMITDATE_YEAR),'
-            '    lineItem.L_RECEIPTDATE_DAY = TOINT(line.L_RECEIPTDATE_DAY),'
-            '    lineItem.L_RECEIPTDATE_MONTH = TOINT(line.L_RECEIPTDATE_MONTH),'
-            '    lineItem.L_RECEIPTDATE_YEAR = TOINT(line.L_RECEIPTDATE_YEAR),'
+            '    lineItem.L_SHIPDATE_DAY = TOINTEGER(line.L_SHIPDATE_DAY),'
+            '    lineItem.L_SHIPDATE_MONTH = TOINTEGER(line.L_SHIPDATE_MONTH),'
+            '    lineItem.L_SHIPDATE_YEAR = TOINTEGER(line.L_SHIPDATE_YEAR),'
+            '    lineItem.L_COMMITDATE_DAY = TOINTEGER(line.L_COMMITDATE_DAY),'
+            '    lineItem.L_COMMITDATE_MONTH = TOINTEGER(line.L_COMMITDATE_MONTH),'
+            '    lineItem.L_COMMITDATE_YEAR =TOINTEGER(line.L_COMMITDATE_YEAR),'
+            '    lineItem.L_RECEIPTDATE_DAY = TOINTEGER(line.L_RECEIPTDATE_DAY),'
+            '    lineItem.L_RECEIPTDATE_MONTH = TOINTEGER(line.L_RECEIPTDATE_MONTH),'
+            '    lineItem.L_RECEIPTDATE_YEAR = TOINTEGER(line.L_RECEIPTDATE_YEAR);'
 
         )
         graphDB.run('CREATE INDEX ON :LINEITEM(L_SUPPKEY); ')
@@ -140,20 +140,21 @@ class InsertData:
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
             'FROM "file:///orders.csv" AS line FIELDTERMINATOR "|" '
-            'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
+            # 'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
 
             'CREATE (order:ORDER { id: TOINTEGER(line.O_ORDERKEY) }) '
             'SET order.O_CUSTKEY = TOINTEGER(line.O_CUSTKEY),'
             '    order.O_ORDERSTATUS = line.O_ORDERSTATUS,	'
+            '    order.O_ORDERKEY = line.O_ORDERKEY,	'
             '    order.O_TOTALPRICE = TOFLOAT(line.O_TOTALPRICE),'
             '    order.O_ORDERDATE = line.O_ORDERDATE,'
             '    order.O_ORDERPRIORITY = line.O_ORDERPRIORITY,'
             '    order.O_CLERK = line.O_CLERK,'
             '    order.O_SHIPPRIORITY = line.O_SHIPPRIORITY,'
             '    order.O_COMMENT = line.O_COMMENT,'
-            '    order.O_YEAR = TOINTEGER(date[2]),'
-            '    order.O_MONTH = TOINTEGER(date[1]),'
-            '    order.O_DAY = TOINTEGER(date[0]) '
+            '    order.O_YEAR = TOINTEGER(line.O_YEAR),'
+            '    order.O_MONTH = TOINTEGER(line.O_MONTH),'
+            '    order.O_DAY = TOINTEGER(line.O_DAY);'
         )
 
     @staticmethod
@@ -332,21 +333,23 @@ class InsertData:
     def insert_nodes(self):
         # InsertData.insert_nodes_nation(self)
         # InsertData.insert_nodes_customer(self)
-        InsertData.insert_nodes_lineItem(self)
+        # InsertData.insert_nodes_lineItem(self)
         # InsertData.insert_nodes_region(self)
         # InsertData.insert_nodes_supplier(self)
         # InsertData.insert_nodes_orders(self)
         # InsertData.insert_nodes_partsupp(self)
         # InsertData.insert_nodes_part(self)
+        print("no insert running...")
 
     def insert_relations(self):
-        InsertData.insert_relation_customer_nation(self)
-        InsertData.insert_relation_lineitem_orders(self)
-        InsertData.insert_relation_lineitem_part(self)
-        InsertData.insert_relation_lineitem_partsupp(self)
-        InsertData.insert_relation_lineitem_supplier(self)
-        InsertData.insert_relation_nation_region(self)
-        InsertData.insert_relation_nation_supplier(self)
-        InsertData.insert_relation_orders_customer(self)
-        InsertData.insert_relation_part_partsupp(self)
-        InsertData.insert_relation_supplier_partsupp(self)
+        # InsertData.insert_relation_customer_nation(self)
+        # InsertData.insert_relation_lineitem_orders(self)
+        # InsertData.insert_relation_lineitem_part(self)
+        # InsertData.insert_relation_lineitem_partsupp(self)
+        # InsertData.insert_relation_lineitem_supplier(self)
+        # InsertData.insert_relation_nation_region(self)
+        # InsertData.insert_relation_nation_supplier(self)
+        # InsertData.insert_relation_orders_customer(self)
+        # InsertData.insert_relation_part_partsupp(self)
+        # InsertData.insert_relation_supplier_partsupp(self)
+        print("no relations running...")
