@@ -56,7 +56,7 @@ class Tables:
                     PS_AVAILQTY INTEGER,
                     PS_SUPPLYCOST DECIMAL(12,2),
                     PS_COMMENT VARCHAR(199),
-                    CONSTRAINT PS_PARTKEY_SUPPKEY PRIMARY KEY (PS_PARTKEY, PS_SUPPKEY)
+                    CONSTRAINT PS_PRIMARY PRIMARY KEY (PS_PARTKEY, PS_SUPPKEY)
                  )
                 """
             cur.execute(table_PARTSUPP)
@@ -105,7 +105,7 @@ class Tables:
                     L_SHIPINSTRUCT CHAR(25),
                     L_SHIPMODE CHAR(10),
                     L_COMMENT VARCHAR(44),
-                    CONSTRAINT L_ORDERKEY_LINENUMBER PRIMARY KEY (L_ORDERKEY, L_LINENUMBER)
+                    CONSTRAINT L_PRIMARY PRIMARY KEY (L_ORDERKEY, L_LINENUMBER)
                 )
                 """
             cur.execute(table_LINEITEM)
