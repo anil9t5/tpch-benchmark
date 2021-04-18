@@ -333,7 +333,7 @@ class InsertData:
     def insert_nodes(self):
         # InsertData.insert_nodes_nation(self)
         # InsertData.insert_nodes_customer(self)
-        # InsertData.insert_nodes_lineItem(self)
+        InsertData.insert_nodes_lineItem(self)
         # InsertData.insert_nodes_region(self)
         # InsertData.insert_nodes_supplier(self)
         # InsertData.insert_nodes_orders(self)
