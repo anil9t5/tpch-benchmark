@@ -6,7 +6,7 @@ class InitializeDB(object):
 
     @staticmethod
     def init():
-        conn = phoenixdb.connect(InitializeDB.database_url, autocommit=InitializeDB.autocommit)
+        conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
 
 
 

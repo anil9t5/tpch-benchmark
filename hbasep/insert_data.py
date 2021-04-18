@@ -14,11 +14,12 @@ class InsertData:
     #---------------------------------
     @staticmethod
     def insert_PART(self):
-        conn = None
+        # conn = None
         try:
 
-            params = config()
-            conn = phoenixdb.connect(**params)
+            # params = config()
+            # conn = phoenixdb.connect(**params)
+            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 200000)
