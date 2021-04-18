@@ -2,8 +2,8 @@ from neo4jp.initialize_db import InitilizeDB
 
 
 class InsertData:
-    #path is /var/lib/neo4j/import
-    def __init__(self,db):
+    # path is /var/lib/neo4j/import
+    def __init__(self, db):
         super().__init__()
         self.db = db
 
@@ -22,7 +22,6 @@ class InsertData:
             'SET nation.N_NAME = line.N_NAME, '
             'nation.N_REGIONKEY = line.N_REGIONKEY, '
             'nation.N_COMMENT = line.N_COMMENT; ')
-
 
     @staticmethod
     def insert_nodes_customer(self):
@@ -52,7 +51,7 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
-            'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" ' 
+            'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" '
 
             'CREATE (lineItem:LINEITEM) '
             'SET lineItem.L_ORDERKEY = toInteger(line.L_ORDERKEY), '
@@ -70,13 +69,22 @@ class InsertData:
             '    lineItem.L_RECEIPTDATE = line.L_RECEIPTDATE,'
             '    lineItem.L_SHIPINSTRUCT = line.L_SHIPINSTRUCT,'
             '    lineItem.L_SHIPMODE = line.L_SHIPMODE,'
-            '    lineItem.L_COMMENT = line.L_COMMENT; '
+            '    lineItem.L_COMMENT = line.L_COMMENT, '
+            '    lineItem.L_SHIPDATE_DAY = TOINT(line.L_SHIPDATE_DAY),'
+            '    lineItem.L_SHIPDATE_MONTH = TOINT(line.L_SHIPDATE_MONTH),'
+            '    lineItem.L_SHIPDATE_YEAR = TOINT(line.L_SHIPDATE_YEAR),'
+            '    lineItem.L_COMMITDATE_DAY = TOINT(line.L_COMMITDATE_DAY),'
+            '    lineItem.L_COMMITDATE_MONTH = TOINT(line.L_COMMITDATE_MONTH),'
+            '    lineItem.L_COMMITDATE_YEAR =TOINT(line.L_COMMITDATE_YEAR),'
+            '    lineItem.L_RECEIPTDATE_DAY = TOINT(line.L_RECEIPTDATE_DAY),'
+            '    lineItem.L_RECEIPTDATE_MONTH = TOINT(line.L_RECEIPTDATE_MONTH),'
+            '    lineItem.L_RECEIPTDATE_YEAR = TOINT(line.L_RECEIPTDATE_YEAR),'
+
         )
         graphDB.run('CREATE INDEX ON :LINEITEM(L_SUPPKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_ORDERKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_PARTKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_LINENUMBER); ')
-
 
     @staticmethod
     def insert_nodes_region(self):
@@ -94,7 +102,7 @@ class InsertData:
             'CREATE (region:REGION { id: TOINTEGER(line.R_REGIONKEY) }) '
             'SET region.R_NAME = line.R_NAME,	'
             '    region.R_COMMENT = line.R_COMMENT; '
-            )
+        )
 
     @staticmethod
     def insert_nodes_supplier(self):
@@ -133,7 +141,7 @@ class InsertData:
             'LOAD CSV WITH HEADERS '
             'FROM "file:///orders.csv" AS line FIELDTERMINATOR "|" '
             'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
-            
+
             'CREATE (order:ORDER { id: TOINTEGER(line.O_ORDERKEY) }) '
             'SET order.O_CUSTKEY = TOINTEGER(line.O_CUSTKEY),'
             '    order.O_ORDERSTATUS = line.O_ORDERSTATUS,	'
@@ -195,7 +203,7 @@ class InsertData:
 
         )
 
-#=======================================================
+# =======================================================
     @staticmethod
     def insert_relation_customer_nation(self):
         graphDB = InitilizeDB.init()
@@ -204,7 +212,7 @@ class InsertData:
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_customer_nation.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (customer:CUSTOMER {id: toInteger(row.C_CUSTKEY)}) '
-            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)}) ' 
+            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)}) '
             'MERGE (customer)-[:FROM_4]->(nation); '
         )
 
@@ -214,9 +222,9 @@ class InsertData:
 
         graphDB.run(
             'USING PERIODIC COMMIT '
-            'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_orders.csv" AS row FIELDTERMINATOR "|" ' 
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: ' 
-            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: ' 
+            'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_orders.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: '
+            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: '
             'toInteger(row.L_LINENUMBER) }) '
             'MATCH (orders:ORDER {id: toInteger(row.L_ORDERKEY), O_CUSTKEY: toInteger(row.O_CUSTKEY)}) '
             'MERGE (lineitem)-[:BELONGS_TO_7]->(orders); '
@@ -229,8 +237,8 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_part.csv" AS row FIELDTERMINATOR "|" '
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: ' 
-            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: ' 
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: '
+            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: '
             'toInteger(row.L_LINENUMBER) }) '
             'MATCH (part:PART {id: toInteger(row.L_PARTKEY), P_NAME: row.P_NAME }) '
             'MERGE (lineitem)-[:COMPOSED_BY_8]->(part); '
@@ -308,7 +316,6 @@ class InsertData:
             'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
         )
 
-
     @staticmethod
     def insert_relation_supplier_partsupp(self):
         graphDB = InitilizeDB.init()
@@ -321,7 +328,7 @@ class InsertData:
             'MERGE (partsupp)-[:SUPPLIED_BY_3]->(supplier); '
         )
 
-#---------------------------------------------------
+# ---------------------------------------------------
     def insert_nodes(self):
         # InsertData.insert_nodes_nation(self)
         # InsertData.insert_nodes_customer(self)
@@ -331,7 +338,6 @@ class InsertData:
         # InsertData.insert_nodes_orders(self)
         # InsertData.insert_nodes_partsupp(self)
         # InsertData.insert_nodes_part(self)
-
 
     def insert_relations(self):
         InsertData.insert_relation_customer_nation(self)

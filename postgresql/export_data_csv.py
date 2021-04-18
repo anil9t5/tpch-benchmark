@@ -37,6 +37,32 @@ class ExportDataCsv:
     #             conn.close()
 
     @staticmethod
+    def export_node_lineitem(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "lineitem"
+            command = '''COPY (
+            SELECT *, split_part(l_shipdate::TEXT,'-',1) AS l_shipdate_year, split_part(l_shipdate::TEXT,'-',2) AS 
+            l_shipdate_month, split_part(l_shipdate::TEXT,'-',3) AS l_shipdate_day, split_part(l_commitdate::TEXT,'-',1) AS 
+            l_commitdate_year, split_part(l_commitdate::TEXT,'-',2) AS l_commitdate_month, split_part(l_commitdate::TEXT,'-',3) AS 
+            l_commitdate_day, split_part(l_receiptdate::TEXT,'-',1) AS l_receiptdate_year, split_part(l_receiptdate::TEXT,'-',2) AS 
+            l_receiptdate_month, split_part(l_receiptdate::TEXT,'-',3) AS l_receiptdate_day  FROM lineitem)
+            TO '{0}{1}.csv'
+            DELIMITER '|' CSV HEADER;'''.format(ExportDataCsv.path, file_name)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
+
+    @staticmethod
     def export_rel_customer_nation(self):
         conn = None
         try:
@@ -285,18 +311,18 @@ class ExportDataCsv:
                 writer.writerows(rows)
 
     def export_to_csv(self):
-        ExportDataCsv.export_rel_customer_nation(self)
+        # ExportDataCsv.export_rel_customer_nation(self)
         # ExportDataCsv.export_rel_lineitem_part(self)
         # ExportDataCsv.export_rel_lineitem_partsupp(self)
         # ExportDataCsv.export_rel_lineitem_supplier(self)
-        ExportDataCsv.export_rel_nation_region(self)
+        # ExportDataCsv.export_rel_nation_region(self)
         # ExportDataCsv.export_rel_nation_supplier(self)
         # ExportDataCsv.export_rel_orders_customer(self)
         # ExportDataCsv.export_rel_part_partsupp(self)
         # ExportDataCsv.export_rel_supplier_partsupp(self)
 
         # ExportDataCsv.export_rel_lineitem_orders(self)
-        # ExportDataCsv.export_node_lineitem(self)
+        ExportDataCsv.export_node_lineitem(self)
 
         os.system("sudo chmod -R a+rwx {0}*.csv".format(ExportDataCsv.path))
         ExportDataCsv.uppercase_header(self, ExportDataCsv.path)
