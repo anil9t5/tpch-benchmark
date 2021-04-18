@@ -18,7 +18,6 @@ class Query1:
             # random_day =90
             date_random = datetime.strptime('1998-12-01', "%Y-%m-%d") - timedelta(days=90)
             date_random = date_random.date()
-            print(date_random)
 
             command = '''select l_returnflag, l_linestatus,
                                 sum(l_quantity) as sum_qty,

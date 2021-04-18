@@ -14,9 +14,6 @@ class Tables:
                        "ORDERS", "LINEITEM", "NATION", "REGION")
 
         try:
-            # params = config()
-            # conn = phoenixdb.connect(**params)
-            # cur = conn.cursor()
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
 

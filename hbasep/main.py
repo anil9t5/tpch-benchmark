@@ -14,7 +14,7 @@ def main():
         task.create_tables()
 
     # Insert data
-    insert_data = False
+    insert_data = True
     read_from_csv = True
     if insert_data:
         if read_from_csv:
@@ -25,7 +25,7 @@ def main():
             insert_task.insert_to_tables()
 
     # Queries
-    run_queries = True
+    run_queries = False
     if run_queries:
         query = RunQueries()
         query.run_queries()

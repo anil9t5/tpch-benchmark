@@ -24,7 +24,7 @@ class Query3:
 
             # #Query Validation:
             random_segment ="BUILDING"
-            random_date ="1995-03-15"
+            random_date ="1975-03-15"
 
             command = '''select
                         l_orderkey,
