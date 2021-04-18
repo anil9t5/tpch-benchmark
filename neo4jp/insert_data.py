@@ -11,9 +11,9 @@ class InsertData:
     def insert_nodes_nation(self):
 
         graphDB = InitilizeDB.init()
-        graphDB.run(
-            'CREATE CONSTRAINT ON (n:NATION) ASSERT n.id IS UNIQUE; '
-        )
+        # graphDB.run(
+        #     'CREATE CONSTRAINT ON (n:NATION) ASSERT n.id IS UNIQUE; '
+        # )
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
@@ -27,9 +27,9 @@ class InsertData:
     def insert_nodes_customer(self):
         graphDB = InitilizeDB.init()
 
-        graphDB.run(
-            'CREATE CONSTRAINT ON (c:CUSTOMER) ASSERT c.id IS UNIQUE;'
-        )
+        # graphDB.run(
+        #     'CREATE CONSTRAINT ON (c:CUSTOMER) ASSERT c.id IS UNIQUE;'
+        # )
 
         graphDB.run(
             'USING PERIODIC COMMIT '
@@ -342,7 +342,7 @@ class InsertData:
         print("no insert running...")
 
     def insert_relations(self):
-        # InsertData.insert_relation_customer_nation(self)
+        InsertData.insert_relation_customer_nation(self)
         # InsertData.insert_relation_lineitem_orders(self)
         # InsertData.insert_relation_lineitem_part(self)
         # InsertData.insert_relation_lineitem_partsupp(self)
