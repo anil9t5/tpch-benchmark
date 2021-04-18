@@ -13,11 +13,8 @@ class RunQueries:
         super().__init__()
 
     def run_queries(self):
-        conn = None
         try:
-            params = config()
-            conn = phoenixdb.connect(**params)
-            cur = conn.cursor()
+            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
 
             q1= Query1(conn)
             q1.execute()
