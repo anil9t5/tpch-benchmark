@@ -10,13 +10,13 @@ def main():
     print("Neo4j db started...")
     db = InitilizeDB.init()
 
-    insert_data=True
+    insert_data=False
     if insert_data:
         insert_task = InsertData(db)
         insert_task.insert_nodes()
         #insert_task.insert_relations()
 
-    delete_data=False
+    delete_data=True
     if delete_data:
         delete_task =DeleteData(db)
         delete_task.delete_nodes()
