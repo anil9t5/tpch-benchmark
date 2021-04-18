@@ -1,5 +1,9 @@
 import time
 import random
+from datetime import datetime, timedelta
+import phoenixdb
+
+
 
 class Query1:
     def __init__(self, conn):
@@ -12,6 +16,9 @@ class Query1:
             random_day =random.randint(60,120)
             # #Query Validation:
             # random_day =90
+            date_random = datetime.strptime('1998-12-01', "%Y-%m-%d") - timedelta(days=90)
+            date_random = date_random.date()
+            print(date_random)
 
             command = '''select l_returnflag, l_linestatus,
                                 sum(l_quantity) as sum_qty,
@@ -24,13 +31,13 @@ class Query1:
                                 count(*) as count_order
                                 from lineitem
                                 where
-                                l_shipdate <= date '1998-12-01' - interval '{0}' day
+                                l_shipdate <= date '{0}'
                                 group by
                                 l_returnflag,
                                 l_linestatus
                                 order by
                                 l_returnflag,
-                                l_linestatus;'''.format(random_day)
+                                l_linestatus'''.format(date_random)
             ts = time.time()
             cur.execute(command)
             resultAll = cur.fetchall()
@@ -43,5 +50,5 @@ class Query1:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except:
-            print("query1")
+        except (Exception, phoenixdb.DatabaseError) as error:
+            print(error)

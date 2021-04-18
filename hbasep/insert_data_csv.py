@@ -77,7 +77,6 @@ class InsertDataCsv:
 
     @staticmethod
     def insert_CUSTOMER(self):
-        conn = None
         try:
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
@@ -88,20 +87,15 @@ class InsertDataCsv:
                     cur.execute(
                         "UPSERT INTO CUSTOMER (C_CUSTKEY, C_NAME, C_ADDRESS, C_NATIONKEY,C_PHONE,C_ACCTBAL, C_MKTSEGMENT,C_COMMENT) "
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (int(row[0]), row[1], row[2], int(row[3]),
-                         row[4], float(row[5]), row[6], row[7])
+                        (int(row[0]), row[1], row[2], int(row[3]), row[4], float(row[5]), row[6], row[7])
                     )
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()
+
 
     @staticmethod
     def insert_ORDERS(self):
-        conn = None
         try:
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
@@ -113,19 +107,16 @@ class InsertDataCsv:
                         "UPSERT INTO ORDERS(O_ORDERKEY, O_CUSTKEY, O_ORDERSTATUS, O_TOTALPRICE, O_ORDERDATE, O_ORDERPRIORITY, O_CLERK, O_SHIPPRIORITY, O_COMMENT) "
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (int(row[0]), int(row[1]), row[2], float(row[3]),
-                         row[4], row[5], row[6], int(row[7]), row[8])
+                         datetime.strptime(row[4], "%Y-%m-%d"), row[5], row[6], int(row[7]), row[8])
                     )
+
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()
+
 
     @staticmethod
     def insert_LINEITEM(self):
-        conn = None
         try:
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
@@ -138,15 +129,16 @@ class InsertDataCsv:
                         "UPSERT INTO LINEITEM(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER, L_QUANTITY, L_EXTENDEDPRICE, L_DISCOUNT, L_TAX, L_RETURNFLAG, L_LINESTATUS, L_SHIPDATE, L_COMMITDATE, L_RECEIPTDATE, L_SHIPINSTRUCT, L_SHIPMODE, L_COMMENT) "
                         "VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (int(row[0]), int(row[1]), int(row[2]), int(row[3]),
-                         float(row[4]), float(row[5]), float(row[6]), float(row[7]), row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+                         float(row[4]), float(row[5]), float(row[6]), float(row[7]),
+                         row[8], row[9], datetime.strptime(row[10], "%Y-%m-%d"), datetime.strptime(row[11], "%Y-%m-%d"), datetime.strptime(row[12], "%Y-%m-%d"), row[13], row[14], row[15])
                     )
+            cur.execute("SELECT count(*) FROM LINEITEM LIMIT 3")
+            resultAll = cur.fetchall()
+            print(resultAll)
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()
+
 
     @staticmethod
     def insert_NATION(self):
@@ -192,8 +184,8 @@ class InsertDataCsv:
     def insert_to_tables(self):
         # InsertDataCsv.insert_PART(self)
         # InsertDataCsv.insert_SUPPLIER(self)
-        InsertDataCsv.insert_PARTSUPP(self)
-        # InsertDataCsv.insert_CUSTOMER(self)
+        # InsertDataCsv.insert_PARTSUPP(self)
+        InsertDataCsv.insert_CUSTOMER(self)
         # InsertDataCsv.insert_ORDERS(self)
         # InsertDataCsv.insert_LINEITEM(self)
         # InsertDataCsv.insert_NATION(self)

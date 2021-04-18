@@ -1,3 +1,4 @@
+import phoenixdb
 import psycopg2
 import time
 import random
@@ -20,8 +21,8 @@ class Query5:
 
 
             #Query Validation:
-            # random_region ="ASIA"
-            # random_date ="1994-1-1"
+            random_region ="ASIA"
+            random_date ="1994-1-1"
 
             command = '''select
                         n_name,
@@ -46,13 +47,12 @@ class Query5:
                         group by
                         n_name
                         order by
-                        revenue desc;'''.format(random_region,random_date)
+                        revenue desc'''.format(random_region,random_date)
 
             ts = time.time()
             cur.execute(command)
             resultAll = cur.fetchall()
             cur.close()
-            self.conn.commit()
             te = time.time()
             print("---------------Query 5-------------")
             print("Start time: " + str(ts))
@@ -60,5 +60,5 @@ class Query5:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)

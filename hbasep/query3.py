@@ -1,3 +1,4 @@
+import phoenixdb
 import psycopg2
 import time
 from datetime import datetime, timedelta
@@ -22,8 +23,8 @@ class Query3:
             random_segment = segment[random.randint(0, 4)]
 
             # #Query Validation:
-            # random_segment ="BUILDING"
-            # random_date ="1995-03-15"
+            random_segment ="BUILDING"
+            random_date ="1995-03-15"
 
             command = '''select
                         l_orderkey,
@@ -46,13 +47,12 @@ class Query3:
                         o_shippriority
                         order by
                         revenue desc,
-                        o_orderdate;'''.format(random_segment, random_date)
+                        o_orderdate'''.format(random_segment, random_date)
 
             ts = time.time()
             cur.execute(command)
             resultAll = cur.fetchall()
             cur.close()
-            self.conn.commit()
             te = time.time()
             print("---------------Query 3-------------")
             print("Start time: " + str(ts))
@@ -60,5 +60,5 @@ class Query3:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
