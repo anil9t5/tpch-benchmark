@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-from insert_data_csv import InsertDataCsv
-from insert_data import InsertData
-from tables import Tables
-from run_queries import RunQueries
+from hbasep.insert_data_csv import InsertDataCsv
+from hbasep.insert_data import InsertData
+from hbasep.tables import Tables
+from hbasep.run_queries import RunQueries
 
 def main():
     print("HBase db started...")
 
     #Create tables
-    create_table=True
+    create_table=False
     if create_table:
         task = Tables()
         task.create_tables()
 
     # Insert data
-    insert_data = False
+    insert_data = True
     read_from_csv = True
     if insert_data:
         if read_from_csv:

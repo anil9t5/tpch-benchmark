@@ -2,7 +2,7 @@ import random
 from random import choice
 from string import ascii_lowercase
 import phoenixdb
-from postgresql.config import config
+from hbasep.config import config
 from datetime import datetime, timedelta
 
 class InsertData:
@@ -14,11 +14,12 @@ class InsertData:
     #---------------------------------
     @staticmethod
     def insert_PART(self):
-        conn = None
+        # conn = None
         try:
 
-            params = config()
-            conn = phoenixdb.connect(**params)
+            # params = config()
+            # conn = phoenixdb.connect(**params)
+            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
 
             data_size = int(self.scale_factor * 200000)
