@@ -54,28 +54,26 @@ class InsertDataCsv:
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
-    #--------------------
+
     @staticmethod
     def insert_PARTSUPP(self):
-        conn = None
         try:
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
             cur = conn.cursor()
-            # with open(InsertDataCsv.csv_path+'partsupp.csv', 'r') as f:
-            #     reader = csv.reader(f, delimiter='|')
-            #     next(reader)  # Skip the header row.
-            #     for row in reader:PS_PARTKEY,PS_SUPPKEY
-            #         cur.execute(
-            #             "UPSERT INTO PARTSUPP(PS_PARTKEY, PS_SUPPKEY, PS_AVAILQTY, PS_SUPPLYCOST, PS_COMMENT, PS_PRIMARY) "
-            #             "VALUES (?, ?, ?, ?, ?, ?)",
-            #             (int(row[0]), int(row[1]), int(row[2]), float(row[3]), row[4], row[5])
-            #         )
+            with open(InsertDataCsv.csv_path+'partsupp.csv', 'r') as f:
+                reader = csv.reader(f, delimiter='|')
+                next(reader)  # Skip the header row.
+                for row in reader:
+                    cur.execute(
+                        "UPSERT INTO PARTSUPP(PS_PARTKEY, PS_SUPPKEY, PS_AVAILQTY, PS_SUPPLYCOST, PS_COMMENT) "
+                        "VALUES (?, ?, ?, ?, ?)",
+                        (int(row[0]), int(row[1]), int(row[2]), float(row[3]), row[4])
+                    )
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
 
-
+    # --------------------
     @staticmethod
     def insert_CUSTOMER(self):
         conn = None
@@ -162,15 +160,12 @@ class InsertDataCsv:
                     cur.execute(
                         "UPSERT INTO NATION(N_NATIONKEY,N_NAME,N_REGIONKEY,N_COMMENT) "
                         "VALUES (?, ?, ?, ?)",
-                        row
+                        (int (row[0]),row[1],int(row[2]),row[3])
                     )
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()
+
 
 
     @staticmethod
@@ -186,16 +181,11 @@ class InsertDataCsv:
                     cur.execute(
                         "UPSERT INTO REGION(R_REGIONKEY,R_NAME,R_COMMENT) "
                         "VALUES (?, ?, ?)",
-                        row
-                    )
+                        (int(row[0]),row[1],row[2])
+                      )
             cur.close()
-            conn.commit()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()
-
 
 
     def insert_to_tables(self):
