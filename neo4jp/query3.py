@@ -11,14 +11,14 @@ class Query3:
             graphDB = InitilizeDB.init()
             start_time = time.time()
 
-            graphDB.run(
+            result=graphDB.run(
                 "MATCH (lineitem:LINEITEM)-[:BELONGS_TO_7]->(order:ORDER)-[:BY_5]->(customer:CUSTOMER) "
                 "WHERE customer.C_MKTSEGMENT = 'BUILDING' AND date(order.O_ORDERDATE) < date('1995-03-15') AND date(lineitem.L_SHIPDATE) > date('1995-03-15') "
                 "RETURN order.id, sum(lineitem.L_EXTENDEDPRICE*(1-lineitem.L_DISCOUNT)) AS REVENUE, order.O_ORDERDATE, order.O_SHIPPRIORITY "
                 "ORDER BY REVENUE DESC, order.O_ORDERDATE "
                 "LIMIT 10; ")
 
-            # print(list(result))
+            print(result)
             end_time = time.time()
             print("---------------Query 3-------------")
             print("Start time: " + str(start_time))

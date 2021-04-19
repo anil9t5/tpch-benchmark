@@ -43,7 +43,7 @@ class ExportDataCsv:
             params = config()
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
-            file_name = "orders"
+            file_name = "orders_neo4j"
             command = '''COPY (
             SELECT *, split_part(o_orderdate::TEXT,'-',1) AS o_year, split_part(o_orderdate::TEXT,'-',2) AS 
             o_month, split_part(o_orderdate::TEXT,'-',3) AS o_day FROM orders)
@@ -66,7 +66,7 @@ class ExportDataCsv:
             params = config()
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
-            file_name = "lineitem"
+            file_name = "lineitem_neo4j"
             command = '''COPY (
             SELECT *, split_part(l_shipdate::TEXT,'-',1) AS l_shipdate_year, split_part(l_shipdate::TEXT,'-',2) AS 
             l_shipdate_month, split_part(l_shipdate::TEXT,'-',3) AS l_shipdate_day, split_part(l_commitdate::TEXT,'-',1) AS 
@@ -344,9 +344,9 @@ class ExportDataCsv:
         # ExportDataCsv.export_rel_part_partsupp(self)
         # ExportDataCsv.export_rel_supplier_partsupp(self)
 
-        # ExportDataCsv.export_rel_lineitem_orders(self)
-        # ExportDataCsv.export_node_lineitem(self)
-        # ExportDataCsv.export_node_orders(self)
+        ExportDataCsv.export_rel_lineitem_orders(self)
+        ExportDataCsv.export_node_lineitem(self)
+        ExportDataCsv.export_node_orders(self)
 
         os.system("sudo chmod -R a+rwx {0}*.csv".format(ExportDataCsv.path))
         ExportDataCsv.uppercase_header(self, ExportDataCsv.path)
