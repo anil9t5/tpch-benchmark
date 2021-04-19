@@ -3,6 +3,7 @@ from neo4jp.initialize_db import InitilizeDB
 
 class InsertData:
     # path is /var/lib/neo4j/import
+    # path is /home/shermin/.config/Neo4j Desktop/Application/relate-data/dbmss/dbms-bf57e619-fbc8-485f-982b-7b2c9b2df382/import
     def __init__(self, db):
         super().__init__()
         self.db = db
@@ -51,7 +52,7 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
-            'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" '
+            'FROM "file:///lineitem_neo4j.csv" AS line FIELDTERMINATOR "|" '
 
             'CREATE (lineItem:LINEITEM) '
             'SET lineItem.L_ORDERKEY = toInteger(line.L_ORDERKEY), '
@@ -139,7 +140,7 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
-            'FROM "file:///orders.csv" AS line FIELDTERMINATOR "|" '
+            'FROM "file:///orders_neo4j.csv" AS line FIELDTERMINATOR "|" '
             # 'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
 
             'CREATE (order:ORDER { id: TOINTEGER(line.O_ORDERKEY) }) '
@@ -342,7 +343,7 @@ class InsertData:
         print("no insert running...")
 
     def insert_relations(self):
-        InsertData.insert_relation_customer_nation(self)
+        # InsertData.insert_relation_customer_nation(self)
         # InsertData.insert_relation_lineitem_orders(self)
         # InsertData.insert_relation_lineitem_part(self)
         # InsertData.insert_relation_lineitem_partsupp(self)
