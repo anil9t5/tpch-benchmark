@@ -37,6 +37,29 @@ class ExportDataCsv:
     #             conn.close()
 
     @staticmethod
+    def export_node_orders(self):
+        conn = None
+        try:
+            params = config()
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            file_name = "orders"
+            command = '''COPY (
+            SELECT *, split_part(o_orderdate::TEXT,'-',1) AS o_year, split_part(o_orderdate::TEXT,'-',2) AS 
+            o_month, split_part(o_orderdate::TEXT,'-',3) AS o_day FROM orders)
+            TO '{0}{1}.csv'
+            DELIMITER '|' CSV HEADER;'''.format(ExportDataCsv.path, file_name)
+            cur.execute(command)
+            cur.close()
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+        finally:
+            if conn is not None:
+                conn.close()
+
+    @staticmethod
     def export_node_lineitem(self):
         conn = None
         try:
@@ -322,7 +345,8 @@ class ExportDataCsv:
         # ExportDataCsv.export_rel_supplier_partsupp(self)
 
         # ExportDataCsv.export_rel_lineitem_orders(self)
-        ExportDataCsv.export_node_lineitem(self)
+        # ExportDataCsv.export_node_lineitem(self)
+        # ExportDataCsv.export_node_orders(self)
 
         os.system("sudo chmod -R a+rwx {0}*.csv".format(ExportDataCsv.path))
         ExportDataCsv.uppercase_header(self, ExportDataCsv.path)
