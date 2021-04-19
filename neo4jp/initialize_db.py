@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase
 from py2neo import Graph
 
+
 class InitilizeDB(object):
     DATABASE = 'tpch'
     USER = 'neo4j'
@@ -12,7 +13,6 @@ class InitilizeDB(object):
 
     @staticmethod
     def init():
-
 
         # InitilizeDB.DRIVER = GraphDatabase.driver(InitilizeDB.URI, auth=("neo4j", "1"))
         # return InitilizeDB.DRIVER

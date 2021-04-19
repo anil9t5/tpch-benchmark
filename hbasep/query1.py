@@ -22,8 +22,7 @@ class Query1:
                                 avg(l_extendedprice) as avg_price,
                                 avg(l_discount) as avg_disc,
                                 count(*) as count_order
-                                from 
-                                lineitem
+                                from lineitem
                                 where
                                 l_shipdate <= date '1998-12-01' - interval '{0}' day
                                 group by

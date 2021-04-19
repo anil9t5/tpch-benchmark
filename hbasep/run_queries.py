@@ -1,23 +1,20 @@
 #!/usr/bin/python
 import phoenixdb
 import time
-from postgresql.config import config
-from postgresql.query1 import Query1
-from postgresql.query2 import Query2
-from postgresql.query3 import Query3
-from postgresql.query4 import Query4
-from postgresql.query5 import Query5
+from hbasep.config import config
+from hbasep.query1 import Query1
+from hbasep.query2 import Query2
+from hbasep.query3 import Query3
+from hbasep.query4 import Query4
+from hbasep.query5 import Query5
 
 class RunQueries:
     def __init__(self):
         super().__init__()
 
     def run_queries(self):
-        conn = None
         try:
-            params = config()
-            conn = phoenixdb.connect(**params)
-            cur = conn.cursor()
+            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
 
             q1= Query1(conn)
             q1.execute()

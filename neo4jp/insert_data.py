@@ -2,8 +2,8 @@ from neo4jp.initialize_db import InitilizeDB
 
 
 class InsertData:
-    #path is /var/lib/neo4j/import
-    def __init__(self,db):
+    # path is /var/lib/neo4j/import
+    def __init__(self, db):
         super().__init__()
         self.db = db
 
@@ -11,9 +11,9 @@ class InsertData:
     def insert_nodes_nation(self):
 
         graphDB = InitilizeDB.init()
-        graphDB.run(
-            'CREATE CONSTRAINT ON (n:NATION) ASSERT n.id IS UNIQUE; '
-        )
+        # graphDB.run(
+        #     'CREATE CONSTRAINT ON (n:NATION) ASSERT n.id IS UNIQUE; '
+        # )
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
@@ -23,14 +23,13 @@ class InsertData:
             'nation.N_REGIONKEY = line.N_REGIONKEY, '
             'nation.N_COMMENT = line.N_COMMENT; ')
 
-
     @staticmethod
     def insert_nodes_customer(self):
         graphDB = InitilizeDB.init()
 
-        graphDB.run(
-            'CREATE CONSTRAINT ON (c:CUSTOMER) ASSERT c.id IS UNIQUE;'
-        )
+        # graphDB.run(
+        #     'CREATE CONSTRAINT ON (c:CUSTOMER) ASSERT c.id IS UNIQUE;'
+        # )
 
         graphDB.run(
             'USING PERIODIC COMMIT '
@@ -52,7 +51,7 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
-            'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" ' 
+            'FROM "file:///lineitem.csv" AS line FIELDTERMINATOR "|" '
 
             'CREATE (lineItem:LINEITEM) '
             'SET lineItem.L_ORDERKEY = toInteger(line.L_ORDERKEY), '
@@ -70,13 +69,22 @@ class InsertData:
             '    lineItem.L_RECEIPTDATE = line.L_RECEIPTDATE,'
             '    lineItem.L_SHIPINSTRUCT = line.L_SHIPINSTRUCT,'
             '    lineItem.L_SHIPMODE = line.L_SHIPMODE,'
-            '    lineItem.L_COMMENT = line.L_COMMENT; '
+            '    lineItem.L_COMMENT = line.L_COMMENT, '
+            '    lineItem.L_SHIPDATE_DAY = TOINTEGER(line.L_SHIPDATE_DAY),'
+            '    lineItem.L_SHIPDATE_MONTH = TOINTEGER(line.L_SHIPDATE_MONTH),'
+            '    lineItem.L_SHIPDATE_YEAR = TOINTEGER(line.L_SHIPDATE_YEAR),'
+            '    lineItem.L_COMMITDATE_DAY = TOINTEGER(line.L_COMMITDATE_DAY),'
+            '    lineItem.L_COMMITDATE_MONTH = TOINTEGER(line.L_COMMITDATE_MONTH),'
+            '    lineItem.L_COMMITDATE_YEAR =TOINTEGER(line.L_COMMITDATE_YEAR),'
+            '    lineItem.L_RECEIPTDATE_DAY = TOINTEGER(line.L_RECEIPTDATE_DAY),'
+            '    lineItem.L_RECEIPTDATE_MONTH = TOINTEGER(line.L_RECEIPTDATE_MONTH),'
+            '    lineItem.L_RECEIPTDATE_YEAR = TOINTEGER(line.L_RECEIPTDATE_YEAR);'
+
         )
         graphDB.run('CREATE INDEX ON :LINEITEM(L_SUPPKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_ORDERKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_PARTKEY); ')
         graphDB.run('CREATE INDEX ON :LINEITEM(L_LINENUMBER); ')
-
 
     @staticmethod
     def insert_nodes_region(self):
@@ -94,7 +102,7 @@ class InsertData:
             'CREATE (region:REGION { id: TOINTEGER(line.R_REGIONKEY) }) '
             'SET region.R_NAME = line.R_NAME,	'
             '    region.R_COMMENT = line.R_COMMENT; '
-            )
+        )
 
     @staticmethod
     def insert_nodes_supplier(self):
@@ -132,20 +140,21 @@ class InsertData:
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS '
             'FROM "file:///orders.csv" AS line FIELDTERMINATOR "|" '
-            'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
-            
+            # 'WITH DISTINCT line, SPLIT(line.O_ORDERDATE, " / ") AS date '
+
             'CREATE (order:ORDER { id: TOINTEGER(line.O_ORDERKEY) }) '
             'SET order.O_CUSTKEY = TOINTEGER(line.O_CUSTKEY),'
             '    order.O_ORDERSTATUS = line.O_ORDERSTATUS,	'
+            '    order.O_ORDERKEY = line.O_ORDERKEY,	'
             '    order.O_TOTALPRICE = TOFLOAT(line.O_TOTALPRICE),'
             '    order.O_ORDERDATE = line.O_ORDERDATE,'
             '    order.O_ORDERPRIORITY = line.O_ORDERPRIORITY,'
             '    order.O_CLERK = line.O_CLERK,'
             '    order.O_SHIPPRIORITY = line.O_SHIPPRIORITY,'
             '    order.O_COMMENT = line.O_COMMENT,'
-            '    order.O_YEAR = TOINTEGER(date[2]),'
-            '    order.O_MONTH = TOINTEGER(date[1]),'
-            '    order.O_DAY = TOINTEGER(date[0]) '
+            '    order.O_YEAR = TOINTEGER(line.O_YEAR),'
+            '    order.O_MONTH = TOINTEGER(line.O_MONTH),'
+            '    order.O_DAY = TOINTEGER(line.O_DAY);'
         )
 
     @staticmethod
@@ -195,7 +204,7 @@ class InsertData:
 
         )
 
-#=======================================================
+# =======================================================
     @staticmethod
     def insert_relation_customer_nation(self):
         graphDB = InitilizeDB.init()
@@ -204,7 +213,7 @@ class InsertData:
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_customer_nation.csv" AS row FIELDTERMINATOR "|" '
             'MATCH (customer:CUSTOMER {id: toInteger(row.C_CUSTKEY)}) '
-            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)}) ' 
+            'MATCH (nation:NATION {id: toInteger(row.C_NATIONKEY)}) '
             'MERGE (customer)-[:FROM_4]->(nation); '
         )
 
@@ -214,9 +223,9 @@ class InsertData:
 
         graphDB.run(
             'USING PERIODIC COMMIT '
-            'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_orders.csv" AS row FIELDTERMINATOR "|" ' 
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: ' 
-            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: ' 
+            'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_orders.csv" AS row FIELDTERMINATOR "|" '
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: '
+            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: '
             'toInteger(row.L_LINENUMBER) }) '
             'MATCH (orders:ORDER {id: toInteger(row.L_ORDERKEY), O_CUSTKEY: toInteger(row.O_CUSTKEY)}) '
             'MERGE (lineitem)-[:BELONGS_TO_7]->(orders); '
@@ -229,8 +238,8 @@ class InsertData:
         graphDB.run(
             'USING PERIODIC COMMIT '
             'LOAD CSV WITH HEADERS FROM "file:///rel_lineitem_part.csv" AS row FIELDTERMINATOR "|" '
-            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: ' 
-            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: ' 
+            'MATCH (lineitem:LINEITEM {L_ORDERKEY: toInteger(row.L_ORDERKEY), L_PARTKEY: '
+            'toInteger(row.L_PARTKEY), L_SUPPKEY: toInteger(row.L_SUPPKEY),L_LINENUMBER: '
             'toInteger(row.L_LINENUMBER) }) '
             'MATCH (part:PART {id: toInteger(row.L_PARTKEY), P_NAME: row.P_NAME }) '
             'MERGE (lineitem)-[:COMPOSED_BY_8]->(part); '
@@ -308,7 +317,6 @@ class InsertData:
             'MERGE (partsupp)-[:COMPOSED_BY_2]->(part); '
         )
 
-
     @staticmethod
     def insert_relation_supplier_partsupp(self):
         graphDB = InitilizeDB.init()
@@ -321,26 +329,27 @@ class InsertData:
             'MERGE (partsupp)-[:SUPPLIED_BY_3]->(supplier); '
         )
 
-#---------------------------------------------------
+# ---------------------------------------------------
     def insert_nodes(self):
         # InsertData.insert_nodes_nation(self)
         # InsertData.insert_nodes_customer(self)
-        InsertData.insert_nodes_lineItem(self)
+        # InsertData.insert_nodes_lineItem(self)
         # InsertData.insert_nodes_region(self)
         # InsertData.insert_nodes_supplier(self)
         # InsertData.insert_nodes_orders(self)
         # InsertData.insert_nodes_partsupp(self)
         # InsertData.insert_nodes_part(self)
-
+        print("no insert running...")
 
     def insert_relations(self):
         InsertData.insert_relation_customer_nation(self)
-        InsertData.insert_relation_lineitem_orders(self)
-        InsertData.insert_relation_lineitem_part(self)
-        InsertData.insert_relation_lineitem_partsupp(self)
-        InsertData.insert_relation_lineitem_supplier(self)
-        InsertData.insert_relation_nation_region(self)
-        InsertData.insert_relation_nation_supplier(self)
-        InsertData.insert_relation_orders_customer(self)
-        InsertData.insert_relation_part_partsupp(self)
-        InsertData.insert_relation_supplier_partsupp(self)
+        # InsertData.insert_relation_lineitem_orders(self)
+        # InsertData.insert_relation_lineitem_part(self)
+        # InsertData.insert_relation_lineitem_partsupp(self)
+        # InsertData.insert_relation_lineitem_supplier(self)
+        # InsertData.insert_relation_nation_region(self)
+        # InsertData.insert_relation_nation_supplier(self)
+        # InsertData.insert_relation_orders_customer(self)
+        # InsertData.insert_relation_part_partsupp(self)
+        # InsertData.insert_relation_supplier_partsupp(self)
+        print("no relations running...")
