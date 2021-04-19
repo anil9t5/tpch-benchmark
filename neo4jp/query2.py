@@ -11,7 +11,7 @@ class Query2:
             graphDB = InitilizeDB.init()
             start_time = time.time()
 
-            graphDB.run(
+            result=graphDB.run(
                 "MATCH (ps:PARTSUPP)-[:SUPPLIED_BY_3]->(s:SUPPLIER)-[:BELONGS_TO_1]->(n:NATION)-[:FROM_10]->(r:REGION) "
                 "where r.R_NAME = 'EUROPE' with ps, min(ps.PS_SUPPLYCOST) as minvalue "
                 "MATCH (ps:PARTSUPP)-[:COMPOSED_BY_2]->(p:PART) "
@@ -20,7 +20,7 @@ class Query2:
                 "return p.id,p.P_MFGR,s.S_ACCTBAL,s.S_NAME,s.S_ADDRESS,s.S_PHONE,s.S_COMMENT,n.N_NAME, r.R_NAME "
                 "order by s.S_ACCTBAL desc,n.N_NAME,s.S_NAME,p.id; ")
 
-            # print(list(result))
+            print(result)
             end_time = time.time()
             print("---------------Query 2-------------")
             print("Start time: " + str(start_time))
