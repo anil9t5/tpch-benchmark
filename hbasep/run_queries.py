@@ -16,14 +16,14 @@ class RunQueries:
         try:
             conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
 
-            q1= Query1(conn)
-            q1.execute()
+            # q1= Query1(conn)
+            # q1.execute()
 
-            # q2=Query2(conn)
-            # q2.execute()
+            q2=Query2(conn)
+            q2.execute()
             #
             # q3 = Query3(conn)
-            # q3.exescute()
+            # q3.execute()
             #
             # q4 = Query4(conn)
             # q4.execute()
@@ -31,10 +31,5 @@ class RunQueries:
             # q5 = Query5(conn)
             # q5.execute()
 
-
-
-        except:
-            print("Error run_queries")
-        finally:
-            if conn is not None:
-                conn.close()
+        except (Exception, phoenixdb.DatabaseError) as error:
+            print(error)

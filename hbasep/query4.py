@@ -1,3 +1,4 @@
+import phoenixdb
 import psycopg2
 import time
 import random
@@ -21,7 +22,7 @@ class Query4:
                 random_date = '"' + all_years[random.randint(0,4)] + '-' + str(random_month) + '-1"'
 
             # #Query Validation:
-            # random_date = "1993-7-1"
+            random_date = "1993-7-1"
 
             command = '''select
                         o_orderpriority,
@@ -43,13 +44,12 @@ class Query4:
                         group by
                         o_orderpriority
                         order by
-                        o_orderpriority;'''.format(random_date)
+                        o_orderpriority'''.format(random_date)
 
             ts = time.time()
             cur.execute(command)
             resultAll = cur.fetchall()
             cur.close()
-            self.conn.commit()
             te = time.time()
             print("---------------Query 4-------------")
             print("Start time: " + str(ts))
@@ -57,5 +57,7 @@ class Query4:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
+
+

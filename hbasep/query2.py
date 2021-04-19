@@ -18,9 +18,9 @@ class Query2:
             region= region_name[random.randint(0, 4)]
 
             # #Query Validation:
-            # size = 15
-            # type = "BRASS"
-            # region = "EUROPE"
+            size = 15
+            type = "BRASS"
+            region = "EUROPE"
 
             command = '''select
                         s_acctbal,
@@ -61,7 +61,7 @@ class Query2:
                         s_acctbal desc,
                         n_name,
                         s_name,
-                        p_partkey;'''.format(size,type3, region)
+                        p_partkey'''.format(size,type3, region)
             ts = time.time()
             cur.execute(command)
             resultAll = cur.fetchall()
