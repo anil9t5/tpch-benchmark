@@ -26,13 +26,13 @@ def main():
             insert_task.insert_to_tables()
 
     # Export relations
-    export_csv_data=True
+    export_csv_data=False
     if export_csv_data:
         export_task = ExportDataCsv()
         export_task.export_to_csv()
 
     # Queries
-    run_queries=False
+    run_queries=True
     if run_queries:
         query = RunQueries()
         query.run_queries()
