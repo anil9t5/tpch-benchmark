@@ -3,6 +3,8 @@ import psycopg2
 import time
 import random
 from datetime import datetime, timedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 class Query4:
     def __init__(self, conn):
@@ -23,6 +25,8 @@ class Query4:
 
             # #Query Validation:
             random_date = "1993-7-1"
+            rd_date = datetime. strptime(random_date, "%Y-%m-%d") + timedelta(days=90)
+            rd_date = rd_date.date()
 
             command = '''select
                         o_orderpriority,
@@ -31,7 +35,7 @@ class Query4:
                         orders
                         where
                         o_orderdate >= date '{0}'
-                        and o_orderdate < date '{0}' + interval '3' month
+                        and o_orderdate < date '{0}' 
                         and exists (
                         select
                         *
@@ -44,7 +48,7 @@ class Query4:
                         group by
                         o_orderpriority
                         order by
-                        o_orderpriority'''.format(random_date)
+                        o_orderpriority'''.format(rd_date)
 
             ts = time.time()
             cur.execute(command)
