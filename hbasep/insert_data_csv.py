@@ -189,6 +189,6 @@ class InsertDataCsv:
         # InsertDataCsv.insert_NATION(self)
         # InsertDataCsv.insert_REGION(self)
 
-        # InsertDataCsv.insert_CUSTOMER(self)
-        InsertDataCsv.insert_ORDERS(self)
+        InsertDataCsv.insert_CUSTOMER(self)
+        # InsertDataCsv.insert_ORDERS(self)
         pass
