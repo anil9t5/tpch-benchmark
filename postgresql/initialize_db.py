@@ -2,7 +2,7 @@ import psycopg2
 
 
 class InitializeDB(object):
-    DATABASE = 'tpch'
+    DATABASE = 'tpch3'
     USER = 'postgres'
     PASSWORD = 'postgres'
     HOST = '127.0.0.1'

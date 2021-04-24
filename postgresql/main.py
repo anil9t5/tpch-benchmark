@@ -9,13 +9,13 @@ def main():
     print("PostgreSQL db started...")
 
     #Create tables
-    create_table=False
+    create_table=True
     if create_table:
         task = Tables()
         task.create_tables()
 
     # Insert data
-    insert_data = False
+    insert_data = True
     read_from_csv = True
     if insert_data:
         if read_from_csv:
