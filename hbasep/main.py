@@ -7,7 +7,7 @@ def main():
     print("HBase db started...")
 
     #Create tables
-    create_table=True
+    create_table=False
     if create_table:
         task = Tables()
         task.create_tables()
@@ -19,7 +19,7 @@ def main():
         insert_task.insert_to_tables()
 
     # Queries
-    run_queries = True
+    run_queries = False
     if run_queries:
         query = RunQueries()
         query.run_queries()
