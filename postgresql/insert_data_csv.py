@@ -1,3 +1,4 @@
+import time
 import random
 from random import choice
 from string import ascii_lowercase
@@ -8,7 +9,7 @@ from datetime import datetime, timedelta
 
 class InsertDataCsv:
 
-    csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/"
+    csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/s003/"
     def __init__(self, scale_factor):
         super().__init__()
         self.scale_factor = scale_factor
@@ -210,14 +211,52 @@ class InsertDataCsv:
 
 
     def insert_to_tables(self):
-        InsertDataCsv.insert_PART(self)
-        InsertDataCsv.insert_SUPPLIER(self)
-        InsertDataCsv.insert_PARTSUPP(self)
-        InsertDataCsv.insert_CUSTOMER(self)
-        InsertDataCsv.insert_ORDERS(self)
+
+        # print("---------------insert_PART-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_PART(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_SUPPLIER-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_SUPPLIER(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_PARTSUPP-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_PARTSUPP(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_CUSTOMER-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_CUSTOMER(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_NATION-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_NATION(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_REGION-------------")
+        # ts = time.time()
+        # InsertDataCsv.insert_REGION(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+
+        print("---------------insert_LINEITEM-------------")
+        ts = time.time()
         InsertDataCsv.insert_LINEITEM(self)
-        InsertDataCsv.insert_NATION(self)
-        InsertDataCsv.insert_REGION(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
 
-
-
+        print("---------------insert_ORDERS-------------")
+        ts = time.time()
+        InsertDataCsv.insert_ORDERS(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
