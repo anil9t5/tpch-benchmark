@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 class InsertDataCsv:
 
     csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/s05/"
+    URI = 'http://localhost:8765/'
 
     def __init__(self, scale_factor):
         super().__init__()
@@ -21,7 +22,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_PART(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'part.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -41,7 +42,7 @@ class InsertDataCsv:
     def insert_SUPPLIER(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'supplier.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -60,7 +61,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_PARTSUPP(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'partsupp.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -79,7 +80,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_CUSTOMER(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'customer.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -98,7 +99,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_ORDERS(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'orders.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -119,7 +120,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_LINEITEM(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
 
             with open(InsertDataCsv.csv_path + 'lineitem.csv', 'r') as f:
@@ -145,7 +146,7 @@ class InsertDataCsv:
     def insert_NATION(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'nation.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -164,7 +165,7 @@ class InsertDataCsv:
     def insert_REGION(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'region.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
