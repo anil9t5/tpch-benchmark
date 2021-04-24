@@ -1,3 +1,4 @@
+import time
 import random
 from random import choice
 from string import ascii_lowercase
@@ -434,13 +435,44 @@ class InsertData:
         return res
 
     def insert_to_tables(self):
-        InsertData.insert_PART(self)
-        InsertData.insert_SUPPLIER(self)
-        InsertData.insert_PARTSUPP(self)
-        InsertData.insert_CUSTOMER(self)
-        InsertData.insert_ORDERS_LINEITEM(self)
-        InsertData.insert_NATION(self)
+        # print("---------------insert_PART-------------")
+        # ts = time.time()
+        # InsertData.insert_PART(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_SUPPLIER-------------")
+        # ts = time.time()
+        # InsertData.insert_SUPPLIER(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_PARTSUPP-------------")
+        # ts = time.time()
+        # InsertData.insert_PARTSUPP(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_CUSTOMER-------------")
+        # ts = time.time()
+        # InsertData.insert_CUSTOMER(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_ORDERS_LINEITEM-------------")
+        # ts = time.time()
+        # InsertData.insert_ORDERS_LINEITEM(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+        #
+        # print("---------------insert_NATION-------------")
+        # ts = time.time()
+        # InsertData.insert_NATION(self)
+        # te = time.time()
+        # print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_REGION-------------")
+        ts = time.time()
         InsertData.insert_REGION(self)
-
-
-
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
