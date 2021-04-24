@@ -1,5 +1,4 @@
 import phoenixdb
-import psycopg2
 import time
 from datetime import datetime, timedelta
 import random

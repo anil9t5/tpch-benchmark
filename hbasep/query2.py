@@ -1,4 +1,4 @@
-import psycopg2
+import phoenixdb
 import time
 import random
 
@@ -74,5 +74,5 @@ class Query2:
             print("In seconds: " + str("{:.7f}".format(te - ts)))
             print(resultAll)
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
