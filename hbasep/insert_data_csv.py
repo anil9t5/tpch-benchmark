@@ -205,27 +205,27 @@ class InsertDataCsv:
         # InsertDataCsv.insert_CUSTOMER(self)
         # te = time.time()
         # print("In seconds: " + str("{:.7f}".format(te - ts)))
-        #
+
         print("---------------insert_LINEITEM-------------")
         ts = time.time()
         InsertDataCsv.insert_LINEITEM(self)
         te = time.time()
         print("In seconds: " + str("{:.7f}".format(te - ts)))
-        #
-        #
+
+
         # print("---------------insert_ORDERS-------------")
         # ts = time.time()
         # InsertDataCsv.insert_ORDERS(self)
         # te = time.time()
         # print("In seconds: " + str("{:.7f}".format(te - ts)))
 
-        #
+
         # print("---------------insert_NATION-------------")
         # ts = time.time()
         # InsertDataCsv.insert_NATION(self)
         # te = time.time()
         # print("In seconds: " + str("{:.7f}".format(te - ts)))
-
+        #
         # print("---------------insert_REGION-------------")
         # ts = time.time()
         # InsertDataCsv.insert_REGION(self)

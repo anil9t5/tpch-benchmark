@@ -13,13 +13,13 @@ def main():
         task.create_tables()
 
     # Insert data
-    insert_data = True
+    insert_data = False
     if insert_data:
         insert_task = InsertDataCsv(0.5)
         insert_task.insert_to_tables()
 
     # Queries
-    run_queries = False
+    run_queries = True
     if run_queries:
         query = RunQueries()
         query.run_queries()
