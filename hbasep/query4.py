@@ -1,5 +1,4 @@
 import phoenixdb
-import psycopg2
 import time
 import random
 from datetime import datetime, timedelta
@@ -19,13 +18,13 @@ class Query4:
             full_years = ["1993", "1994", "1995", "1996"]
             random_month=random.randint(1,12)
             if random_month>10:
-                random_date='"'+full_years[random.randint(0,3)]+'-'+str(random_month)+'-1"'
+                random_date=full_years[random.randint(0,3)]+'-'+str(random_month)+"-01"
             else:
-                random_date = '"' + all_years[random.randint(0,4)] + '-' + str(random_month) + '-1"'
+                random_date =  all_years[random.randint(0,4)] + '-' + str(random_month) + "-01"
+
 
             # #Query Validation:
-            random_date = "1993-7-1"
-            rd_date = datetime. strptime(random_date, "%Y-%m-%d") + timedelta(days=90)
+            rd_date = datetime.strptime(random_date, '%Y-%m-%d') + timedelta(days=90)
             rd_date = rd_date.date()
 
             command = '''select
@@ -35,7 +34,7 @@ class Query4:
                         orders
                         where
                         o_orderdate >= date '{0}'
-                        and o_orderdate < date '{0}' 
+                        and o_orderdate < date '{1}'
                         and exists (
                         select
                         *
@@ -48,7 +47,7 @@ class Query4:
                         group by
                         o_orderpriority
                         order by
-                        o_orderpriority'''.format(rd_date)
+                        o_orderpriority'''.format(random_date, rd_date)
 
             ts = time.time()
             cur.execute(command)

@@ -1,5 +1,4 @@
 import phoenixdb
-import psycopg2
 import time
 import random
 from datetime import datetime, timedelta
@@ -17,12 +16,15 @@ class Query5:
             random_region = regions[random.randint(0,4)]
 
             years = ["1993", "1994", "1995", "1996", "1997"]
-            random_date = '"' + str(years[random.randint(0, 4)]) + '-1-'+str(random.randint(1,31))+'"'
+            random_date =  str(years[random.randint(0, 4)]) + '-01-'+str(random.randint(1,31))
 
 
             #Query Validation:
-            random_region ="ASIA"
-            random_date ="1994-1-1"
+            # random_region ="ASIA"
+            # random_date ="1994-1-1"
+            interval_date = datetime.strptime(random_date, "%Y-%m-%d") + timedelta(days=365)
+            interval_date = interval_date.date()
+
 
             command = '''select
                         n_name,
@@ -43,11 +45,11 @@ class Query5:
                         and n_regionkey = r_regionkey
                         and r_name = '{0}'
                         and o_orderdate >= date '{1}'
-                        and o_orderdate < date '{1}' + interval '1' year
+                        and o_orderdate < date '{2}' 
                         group by
                         n_name
                         order by
-                        revenue desc'''.format(random_region,random_date)
+                        revenue desc'''.format(random_region,random_date,interval_date)
 
             ts = time.time()
             cur.execute(command)

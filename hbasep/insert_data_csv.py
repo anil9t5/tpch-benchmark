@@ -1,3 +1,4 @@
+import time
 import random
 from random import choice
 from string import ascii_lowercase
@@ -10,7 +11,8 @@ from datetime import datetime, timedelta
 
 class InsertDataCsv:
 
-    csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/"
+    csv_path = "/home/shermin/Desktop/Projs/BigData/Data/datacsv/s001/"
+    URI = 'http://localhost:8765/'
 
     def __init__(self, scale_factor):
         super().__init__()
@@ -20,7 +22,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_PART(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'part.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -40,7 +42,7 @@ class InsertDataCsv:
     def insert_SUPPLIER(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'supplier.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -59,7 +61,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_PARTSUPP(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'partsupp.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -78,7 +80,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_CUSTOMER(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'customer.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -97,7 +99,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_ORDERS(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path + 'orders.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -118,7 +120,7 @@ class InsertDataCsv:
     @staticmethod
     def insert_LINEITEM(self):
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
 
             with open(InsertDataCsv.csv_path + 'lineitem.csv', 'r') as f:
@@ -132,9 +134,6 @@ class InsertDataCsv:
                          float(row[4]), float(row[5]), float(row[6]), float(row[7]),
                          row[8], row[9], datetime.strptime(row[10], "%Y-%m-%d"), datetime.strptime(row[11], "%Y-%m-%d"), datetime.strptime(row[12], "%Y-%m-%d"), row[13], row[14], row[15])
                     )
-            cur.execute("SELECT count(*) FROM LINEITEM LIMIT 3")
-            resultAll = cur.fetchall()
-            print(resultAll)
             cur.close()
         except (Exception, phoenixdb.DatabaseError) as error:
             print(error)
@@ -144,7 +143,7 @@ class InsertDataCsv:
     def insert_NATION(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'nation.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -163,7 +162,7 @@ class InsertDataCsv:
     def insert_REGION(self):
         conn = None
         try:
-            conn = phoenixdb.connect('http://localhost:8765/', autocommit=True)
+            conn = phoenixdb.connect(InsertDataCsv.URI, autocommit=True)
             cur = conn.cursor()
             with open(InsertDataCsv.csv_path+'region.csv', 'r') as f:
                 reader = csv.reader(f, delimiter='|')
@@ -182,13 +181,52 @@ class InsertDataCsv:
                 conn.close()
 
     def insert_to_tables(self):
-        # InsertDataCsv.insert_PART(self)
-        # InsertDataCsv.insert_LINEITEM(self)
-        # InsertDataCsv.insert_SUPPLIER(self)
-        # InsertDataCsv.insert_PARTSUPP(self)
-        # InsertDataCsv.insert_NATION(self)
-        # InsertDataCsv.insert_REGION(self)
 
-        # InsertDataCsv.insert_CUSTOMER(self)
+        print("---------------insert_PART-------------")
+        ts = time.time()
+        InsertDataCsv.insert_PART(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_SUPPLIER-------------")
+        ts = time.time()
+        InsertDataCsv.insert_SUPPLIER(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_PARTSUPP-------------")
+        ts = time.time()
+        InsertDataCsv.insert_PARTSUPP(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_CUSTOMER-------------")
+        ts = time.time()
+        InsertDataCsv.insert_CUSTOMER(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_NATION-------------")
+        ts = time.time()
+        InsertDataCsv.insert_NATION(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_REGION-------------")
+        ts = time.time()
+        InsertDataCsv.insert_REGION(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+        print("---------------insert_LINEITEM-------------")
+        ts = time.time()
+        InsertDataCsv.insert_LINEITEM(self)
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
+
+
+        print("---------------insert_ORDERS-------------")
+        ts = time.time()
         InsertDataCsv.insert_ORDERS(self)
-        pass
+        te = time.time()
+        print("In seconds: " + str("{:.7f}".format(te - ts)))
