@@ -22,31 +22,31 @@ class Query3:
             random_segment = segment[random.randint(0, 4)]
 
             # #Query Validation:
-            random_segment ="BUILDING"
-            random_date ="1975-03-15"
+            # random_segment ="BUILDING"
+            # random_date ="1975-03-15"
 
             command = '''select
-                        l_orderkey,
-                        sum(l_extendedprice*(1-l_discount)) as revenue,
-                        o_orderdate,
-                        o_shippriority
+                            l_orderkey,
+                            sum(l_extendedprice*(1-l_discount)) as revenue,
+                            o_orderdate,
+                            o_shippriority
                         from
-                        customer,
-                        orders,
-                        lineitem
+                            customer,
+                            orders,
+                            lineitem
                         where
-                        c_mktsegment = '{0}'
-                        and c_custkey = o_custkey
-                        and l_orderkey = o_orderkey
-                        and o_orderdate < date '{1}'
-                        and l_shipdate > date '{1}'
+                            c_mktsegment = '{0}'
+                            and c_custkey = o_custkey
+                            and l_orderkey = o_orderkey
+                            and o_orderdate < date '{1}'
+                            and l_shipdate > date '{1}'
                         group by
-                        l_orderkey,
-                        o_orderdate,
-                        o_shippriority
+                            l_orderkey,
+                            o_orderdate,
+                            o_shippriority
                         order by
-                        revenue desc,
-                        o_orderdate'''.format(random_segment, random_date)
+                            revenue desc,
+                            o_orderdate'''.format(random_segment, random_date)
 
             ts = time.time()
             cur.execute(command)

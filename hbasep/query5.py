@@ -16,16 +16,15 @@ class Query5:
             random_region = regions[random.randint(0,4)]
 
             years = ["1993", "1994", "1995", "1996", "1997"]
-            random_date = '"' + str(years[random.randint(0, 4)]) + '-1-'+str(random.randint(1,31))+'"'
+            random_date =  str(years[random.randint(0, 4)]) + '-01-'+str(random.randint(1,31))
 
 
             #Query Validation:
-            random_region ="ASIA"
-            random_date ="1994-1-1"
-
-            interval_date = datetime.strptime(random_date, "%Y-%m-%d")  - timedelta(days=365)
-
+            # random_region ="ASIA"
+            # random_date ="1994-1-1"
+            interval_date = datetime.strptime(random_date, "%Y-%m-%d") + timedelta(days=365)
             interval_date = interval_date.date()
+
 
             command = '''select
                         n_name,
