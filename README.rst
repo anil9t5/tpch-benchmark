@@ -31,6 +31,7 @@ query execution tasks. The program is platform independent and could run on any 
 
 
 ******TPC-H DBGen data for different Scale Factors******
+
 Scale Factor 0.01: https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/EoW82ZKXreBFq2v2pEu4KfkBmP4U3rslBsEFnj-XotShPQ?e=4EBhXE
 Scale Factor 0.03: https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/EjlH-lPQ0DBKivusd17GrssB-5LUzD9BlprMVvWOxuBU3A?e=rO5JKI
 Scale Factor 0.5:  https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/ElDOfRoKIQ5Dn8BgjeCE43oBtO35ROw1i7vAFBT9BhyyGQ?e=y3yj3u
