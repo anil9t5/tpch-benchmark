@@ -1,3 +1,4 @@
+# We joined codes found on  https://github.com/aiquis/tpch-neo4j and added our own to make them work.
 from neo4jp.initialize_db import InitilizeDB
 import time
 
@@ -11,7 +12,7 @@ class Query1:
             graphDB = InitilizeDB.init()
             start_time = time.time()
 
-            result=graphDB.run(
+            result = graphDB.run(
                 "WITH date('1998-12-01') - duration('P90D') AS my_date "
                 "MATCH (item:LINEITEM) "
                 "WHERE date(item.L_SHIPDATE) <= date(my_date) "
