@@ -16,10 +16,10 @@ The project also contains a JS script "mongo-join.js", that creates a single joi
 3. csv
 4. py2neo
 5. pymongo
-5. datetime
-6. pandas
-7. json
-8. glob
+6. datetime
+7. pandas
+8. json
+9. glob
 
 ******Run individual module on terminal******
 
