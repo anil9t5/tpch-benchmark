@@ -23,7 +23,7 @@ The project also contains a JS script "mongo-join.js", that creates a single joi
 
 ******Run individual module on terminal******
 
-python3 -m <module name> // module name => mongodb, postgresql, hbase, neo4j
+python3 -m <module name> # module name => mongodb, postgresql, hbase, neo4j
 
 The above script executes, the main.py file inside the selected module, which is the initial execution point. The boolean values in the main.py could be toggled in order to perform data insert and 
 query execution tasks. The program is platform independent and could run on any machine with all the necessary setup.
