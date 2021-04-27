@@ -1,5 +1,6 @@
 from mongodb.initialize_db import InitilizeDB
 from bson.son import SON
+# We joined codes found on  https://www.ifi.uzh.ch/dam/jcr:ffffffff-96c1-007c-0000-000010c732ce/VertiefungRutishauser.pdf and added our own to make them work.
 import pymongo
 from pymongo import errors
 import datetime

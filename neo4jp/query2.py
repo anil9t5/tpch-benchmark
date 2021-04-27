@@ -1,3 +1,4 @@
+# We joined codes found on  https://github.com/aiquis/tpch-neo4j and added our own to make them work.
 from neo4jp.initialize_db import InitilizeDB
 import time
 
@@ -11,7 +12,7 @@ class Query2:
             graphDB = InitilizeDB.init()
             start_time = time.time()
 
-            result=graphDB.run(
+            result = graphDB.run(
                 "MATCH (ps:PARTSUPP)-[:SUPPLIED_BY_3]->(s:SUPPLIER)-[:BELONGS_TO_1]->(n:NATION)-[:FROM_10]->(r:REGION) "
                 "where r.R_NAME = 'EUROPE' with ps, min(ps.PS_SUPPLYCOST) as minvalue "
                 "MATCH (ps:PARTSUPP)-[:COMPOSED_BY_2]->(p:PART) "
