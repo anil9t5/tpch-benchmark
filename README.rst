@@ -42,7 +42,7 @@ Scale Factor 1:    https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_un
 
 *****************************************************************
 
-******Running code in PostgreSQL ******
+******Example of Running code in PostgreSQL ******
 
 Install PostgreSQL, then run it: 
 
@@ -72,3 +72,4 @@ run the code by
 
 From within the project folder tpch-benchmark-master
 
+Do the same for other databases, first create a database, then set those options true. 
