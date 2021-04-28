@@ -1,4 +1,4 @@
-# We joined codes found on  https://github.com/aiquis/tpch-neo4j and added our own to make them work.
+# We adapted and modified codes found on https://github.com/aiquis/tpch-neo4j and added our own to make them work.
 from neo4jp.initialize_db import InitilizeDB
 import time
 
