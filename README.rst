@@ -40,27 +40,20 @@ Scale Factor 0.5:  https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_un
 
 Scale Factor 1:    https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_unb_ca/Documents/BigData/DBGEN%20s1?csf=1&web=1&e=bAxqla
 
-******Running code in PostgreSQL ******
-Install PostgreSQL, then run it: 
+******Running code in PostgreSQL ******<br />
+Install PostgreSQL, then run it: <br />
+> sudo -u postgres psql<br />
+In PostgreSQL create a database: <br />
+CREATE DATABASE tpch; <br />
+Add the name of database to the database.ini and initialization module. <br />
+In postresql folder main file set the following to True for a full run<br />
+create_table = True<br />
+insert_data = True<br />
+read_from_csv = True<br />
+run_queries = True<br />
+After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true: <br />
+export_csv_data = True<br />
+run the code by <br />
+> python3 -m postgresql<br />
+From within the project folder tpch-benchmark-master<br />
 
-> sudo -u postgres psql
-
-In PostgreSQL create a database:
-CREATE DATABASE tpch;
-
-Add the name of database to the database.ini and initialization module. 
-
-In postresql folder main file set the following to True for a full run
-create_table = True
-insert_data = True
-
-read_from_csv = True
-run_queries = True
-
-After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true:
-export_csv_data = True
-
-run the code by 
-
-> python3 -m postgresql
-From within the project folder tpch-benchmark-master
