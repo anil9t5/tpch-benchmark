@@ -56,10 +56,10 @@ Add the name of database to the database.ini and initialization module.
 
 In postresql folder main file set the following to True for a full run
 
-create_table = True&nbsp;
-insert_data = True&nbsp;
-read_from_csv = True&nbsp;
-run_queries = True
+|create_table = True
+|insert_data = True
+|read_from_csv = True
+|run_queries = True
 
 After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true: 
 
