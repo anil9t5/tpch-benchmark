@@ -69,5 +69,6 @@ export_csv_data = True
 run the code by 
 
 > python3 -m postgresql
+
 From within the project folder tpch-benchmark-master
 
