@@ -42,18 +42,25 @@ Scale Factor 1:    https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_un
 
 ******Running code in PostgreSQL ******
 Install PostgreSQL, then run it: 
+
 > sudo -u postgres psql
+
 In PostgreSQL create a database:
 CREATE DATABASE tpch;
+
 Add the name of database to the database.ini and initialization module. 
+
 In postresql folder main file set the following to True for a full run
 create_table = True
 insert_data = True
 
 read_from_csv = True
 run_queries = True
+
 After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true:
 export_csv_data = True
+
 run the code by 
+
 > python3 -m postgresql
 From within the project folder tpch-benchmark-master
