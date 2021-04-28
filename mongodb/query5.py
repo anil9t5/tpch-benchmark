@@ -1,4 +1,4 @@
-# We joined codes found on  https://www.ifi.uzh.ch/dam/jcr:ffffffff-96c1-007c-0000-000010c732ce/VertiefungRutishauser.pdf and added our own to make them work.
+# We adapted and modified codes found on  https://www.ifi.uzh.ch/dam/jcr:ffffffff-96c1-007c-0000-000010c732ce/VertiefungRutishauser.pdf, https://mongodb2017.wordpress.com/, and added our own to make them work.
 from mongodb.initialize_db import InitilizeDB
 import pymongo
 from pymongo import errors
