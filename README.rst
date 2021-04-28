@@ -32,10 +32,28 @@ query execution tasks. The program is platform independent and could run on any 
 
 ******TPC-H DBGen data for different Scale Factors******
 
-Scale Factor 0.01: https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/EoW82ZKXreBFq2v2pEu4KfkBmP4U3rslBsEFnj-XotShPQ?e=4EBhXE
+Scale Factor 0.01: https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_unb_ca/Documents/BigData/DBGEN%20s0.01?csf=1&web=1&e=UYB7m6
 
-Scale Factor 0.03: https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/EjlH-lPQ0DBKivusd17GrssB-5LUzD9BlprMVvWOxuBU3A?e=rO5JKI
+Scale Factor 0.03: https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_unb_ca/Documents/BigData/DBGEN%20s0.03?csf=1&web=1&e=GQlCks
 
-Scale Factor 0.5:  https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/ElDOfRoKIQ5Dn8BgjeCE43oBtO35ROw1i7vAFBT9BhyyGQ?e=y3yj3u
+Scale Factor 0.5:  https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_unb_ca/Documents/BigData/DBGEN%20s0.5?csf=1&web=1&e=C7AgSX
 
-Scale Factor 1:    https://unbcloud-my.sharepoint.com/:f:/g/personal/skhosra1_unb_ca/EnxFDtseUFZAoe_lQNoWSrABbGU8LdaT074XNblv1wSihA?e=Hvi7ar
+Scale Factor 1:    https://unbcloud-my.sharepoint.com/:f:/r/personal/skhosra1_unb_ca/Documents/BigData/DBGEN%20s1?csf=1&web=1&e=bAxqla
+
+******Running code in PostgreSQL ******
+Install PostgreSQL, then run it: 
+> sudo -u postgres psql
+In PostgreSQL create a database:
+CREATE DATABASE tpch;
+Add the name of database to the database.ini and initialization module. 
+In postresql folder main file set the following to True for a full run
+create_table = True
+insert_data = True
+
+read_from_csv = True
+run_queries = True
+After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true:
+export_csv_data = True
+run the code by 
+> python3 -m postgresql
+From within the project folder tpch-benchmark-master
