@@ -61,7 +61,7 @@ In postresql folder main file set the following to True for a full run
 | read_from_csv = True
 | run_queries = True
 
-After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true: 
+| After inserting the data into postgresql if you wanted to export relations for Neo4j make the following true: 
 
 export_csv_data = True
 
